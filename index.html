@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linktree Master</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="icon" href="./img/favicon.png">
+</head>
+
+<body class="linktree-body">
+    <main class="linktree-container">
+        <button id="share-btn" class="action-btn top-right" aria-label="Teilen">
+            <img src="./icons/share.png" alt="" class="custom-icon share-icon" onerror="this.style.display='none'">
+        </button>
+
+        <div id="profile-container" class="linktree-profile"></div>
+        <div id="video-container"></div>
+        <div id="links-container" class="linktree-links"></div>
+
+        <footer class="legal-footer">
+            <a href="#">Impressum</a> <span>|</span> <a href="#">Datenschutz</a>
+        </footer>
+    </main>
+
+    <script src="./render.js"></script>
+    <script>
+        const shareBtn = document.getElementById('share-btn');
+        if (shareBtn) {
+            shareBtn.addEventListener('click', () => {
+                if (navigator.share) {
+                    navigator.share({
+                        title: document.title,
+                        url: window.location.href
+                    }).catch(e => console.error(e));
+                } else {
+                    navigator.clipboard.writeText(window.location.href);
+                    alert("Link kopiert");
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,56 @@
+{
+  "profile": {
+    "name": "Dein Name",
+    "description": "Kurze, knackige Beschreibung über dich. Was machst du? Warum sollten Leute dir folgen? ✨",
+    "image": "./img/logo.jpg"
+  },
+  "socialIcons": [
+    {
+      "url": "#",
+      "icon": "./icons/insta.png"
+    },
+    {
+      "url": "#",
+      "icon": "./icons/tiktok.png"
+    },
+    {
+      "url": "mailto:deine@email.de",
+      "icon": "./icons/mail.png"
+    }
+  ],
+  "videoModule": {
+    "isVisible": true,
+    "url": "https://youtube.com",
+    "thumbnail": "./icons/youtube.png",
+    "title": "Neuestes Video",
+    "subtitle": "YouTube • Titel des Videos",
+    "buttonText": "Jetzt ansehen"
+  },
+  "links": [
+    {
+      "title": "Meine Webseite",
+      "url": "#",
+      "icon": "./icons/website.png"
+    },
+    {
+      "title": "Instagram (@dein_name)",
+      "url": "#",
+      "icon": "./icons/insta.png"
+    },
+    {
+      "title": "TikTok",
+      "url": "#",
+      "icon": "./icons/tiktok.png"
+    },
+    {
+      "title": "Kaffeekasse (Ko-fi)",
+      "url": "#",
+      "icon": "./icons/cafe.png"
+    },
+    {
+      "title": "Meine Amazon Wunschliste",
+      "url": "#",
+      "icon": "./icons/amazon.png"
+    }
+  ]
+}
