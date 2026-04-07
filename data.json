@@ -1,6 +1,6 @@
 {
   "profile": {
-    "name": "Dein Name",
+    "name": "Testumgebung",
     "description": "Kurze, knackige Beschreibung über dich. Was machst du? Warum sollten Leute dir folgen? ✨",
     "image": "./img/logo.jpg"
   },
@@ -43,14 +43,14 @@
       "icon": "./icons/tiktok.png"
     },
     {
-      "title": "Kaffeekasse (Ko-fi)",
-      "url": "#",
-      "icon": "./icons/cafe.png"
-    },
-    {
       "title": "Meine Amazon Wunschliste",
       "url": "#",
       "icon": "./icons/amazon.png"
+    },
+    {
+      "title": "Kaffeekasse (Ko-fi)",
+      "url": "#",
+      "icon": "./icons/cafe.png"
     }
   ]
 }
