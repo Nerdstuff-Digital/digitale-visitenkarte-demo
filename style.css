@@ -260,5 +260,4 @@ body.linktree-body {
 /* Netlify Identity Widget in den absoluten Vordergrund zwingen */
 #netlify-identity-widget {
     z-index: 999999 !important;
-    display: block !important;
 }
