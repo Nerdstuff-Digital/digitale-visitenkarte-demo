@@ -4,18 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digitale Visitenkarte</title>
+    <title>Vorschau – Digitale Visitenkarte</title>
     <link rel="stylesheet" href="./themes/darkgreen.css">
-    <link rel="icon" href="./img/favicon.png">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body class="linktree-body">
-    <main class="linktree-container">
-        <button id="share-btn" class="action-btn top-right" aria-label="Teilen">
-            <img src="./icons/share.png" alt="" class="custom-icon share-icon" onerror="this.style.display='none'">
-        </button>
 
+    <div class="preview-banner" id="preview-banner" style="display:none;">
+        Vorschau – ungespeicherte Änderungen
+    </div>
+
+    <main class="linktree-container">
         <div id="profile-container" class="linktree-profile"></div>
         <div id="video-container"></div>
         <div id="links-container" class="linktree-links"></div>
@@ -31,6 +31,20 @@
         const SUPABASE_ANON_KEY = 'sb_publishable_6vNM_zVfFfcCjaI5TQRbWQ_X6swaIFk';
 
         document.addEventListener('DOMContentLoaded', async () => {
+            const liveRaw = localStorage.getItem('visitenkarte_preview');
+
+            if (liveRaw) {
+                try {
+                    const treeData = JSON.parse(liveRaw);
+                    document.getElementById('preview-banner').style.display = 'block';
+                    if (treeData.profile)     renderProfile(treeData.profile);
+                    if (treeData.socialIcons) renderSocialIcons(treeData.socialIcons);
+                    if (treeData.videoModule) renderVideoModule(treeData.videoModule);
+                    if (treeData.links)       renderLinks(treeData.links);
+                    return;
+                } catch (e) {}
+            }
+
             const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             try {
                 const { data, error } = await client
@@ -50,19 +64,7 @@
                 console.error('Fehler beim Laden:', err);
             }
         });
-
-        const shareBtn = document.getElementById('share-btn');
-        if (shareBtn) {
-            shareBtn.addEventListener('click', () => {
-                if (navigator.share) {
-                    navigator.share({ title: document.title, url: window.location.href }).catch(e => console.error(e));
-                } else {
-                    navigator.clipboard.writeText(window.location.href);
-                    alert('Link kopiert');
-                }
-            });
-        }
     </script>
-</body>
 
+</body>
 </html>

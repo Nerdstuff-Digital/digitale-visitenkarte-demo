@@ -1,3 +1,16 @@
+@font-face {
+    font-family: "TitelSchrift";
+    src: url("./assets/fonts/Figtree-Bold.ttf") format("truetype");
+}
+@font-face {
+    font-family: "TextSchrift";
+    src: url("./assets/fonts/Figtree-Medium.ttf") format("truetype");
+}
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
 :root {
     --bg-main: #0d1f15;
     --card-bg: #142e20;
@@ -12,7 +25,7 @@
 body.linktree-body {
     background-color: var(--bg-main);
     color: var(--text-light);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: "TextSchrift", sans-serif;
     margin: 0;
     padding: 0;
     min-height: 100vh;
@@ -56,13 +69,8 @@ body.linktree-body {
     text-decoration: none;
 }
 
-.top-right {
-    right: 25px;
-}
-
-.top-left {
-    left: 25px;
-}
+.top-right { right: 25px; }
+.top-left  { left: 25px; }
 
 .action-btn:hover {
     background-color: rgba(255, 255, 255, 0.05);
@@ -155,9 +163,7 @@ body.linktree-body {
     text-decoration: none;
 }
 
-.featured-icon-wrapper {
-    margin-bottom: 15px;
-}
+.featured-icon-wrapper { margin-bottom: 15px; }
 
 .featured-main-icon {
     width: 32px;
@@ -191,9 +197,7 @@ body.linktree-body {
     transition: opacity 0.3s ease;
 }
 
-.featured-action-btn:hover {
-    opacity: 0.9;
-}
+.featured-action-btn:hover { opacity: 0.9; }
 
 .linktree-btn {
     display: flex;
@@ -247,15 +251,5 @@ body.linktree-body {
     transition: color 0.3s ease;
 }
 
-.legal-footer a:hover {
-    color: var(--accent-gold);
-}
-
-.legal-footer span {
-    cursor: default;
-}
-
-/* Netlify Identity Widget in den absoluten Vordergrund zwingen */
-#netlify-identity-widget {
-    z-index: 999999 !important;
-}
+.legal-footer a:hover { color: var(--accent-gold); }
+.legal-footer span    { cursor: default; }

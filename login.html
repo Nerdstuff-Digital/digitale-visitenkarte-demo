@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login – Digitale Visitenkarte</title>
+    <link rel="icon" href="./img/favicon.png">
+    <link rel="stylesheet" href="./style-admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body class="login-page">
+
+    <div class="login-wrapper">
+
+        <div class="login-logo-wrap">
+            <img src="./img/logo-cyber-d20.png" alt="Logo" class="login-logo" onerror="this.style.display='none'">
+            <span class="login-site-name">Digitale Visitenkarte</span>
+        </div>
+
+        <div class="login-card">
+            <div id="view-login">
+                <h1 class="login-heading">Willkommen <span>zurück.</span></h1>
+                <p class="login-subline">Melde dich an, um deine Visitenkarte zu bearbeiten.</p>
+
+                <div class="field-group">
+                    <label for="login-email">E-Mail</label>
+                    <input type="email" id="login-email" placeholder="deine@email.de" autocomplete="email">
+                </div>
+
+                <div class="field-group">
+                    <label for="login-password">Passwort</label>
+                    <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+                </div>
+
+                <button class="login-submit-btn" id="login-btn">Anmelden</button>
+                <div class="status-message" id="login-status"></div>
+
+                <button class="login-secondary-btn" id="show-register-btn">Noch kein Konto? Registrieren</button>
+            </div>
+
+            <div id="view-register" style="display:none;">
+                <h1 class="login-heading">Konto <span>erstellen.</span></h1>
+                <p class="login-subline">Erstelle deinen Zugang zur Digitalen Visitenkarte.</p>
+
+                <div class="field-group">
+                    <label for="reg-email">E-Mail</label>
+                    <input type="email" id="reg-email" placeholder="deine@email.de" autocomplete="email">
+                </div>
+
+                <div class="field-group">
+                    <label for="reg-password">Passwort</label>
+                    <input type="password" id="reg-password" placeholder="Mindestens 6 Zeichen" autocomplete="new-password">
+                </div>
+
+                <div class="field-group">
+                    <label for="reg-password2">Passwort wiederholen</label>
+                    <input type="password" id="reg-password2" placeholder="••••••••" autocomplete="new-password">
+                </div>
+
+                <button class="login-submit-btn" id="register-btn">Konto erstellen</button>
+                <div class="status-message" id="register-status"></div>
+
+                <button class="login-secondary-btn" id="show-login-btn">Zurück zum Anmelden</button>
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <script src="./auth.js"></script>
+    <script>
+        const viewLogin    = document.getElementById('view-login');
+        const viewRegister = document.getElementById('view-register');
+
+        document.getElementById('show-register-btn').addEventListener('click', () => {
+            viewLogin.style.display = 'none';
+            viewRegister.style.display = 'block';
+        });
+
+        document.getElementById('show-login-btn').addEventListener('click', () => {
+            viewRegister.style.display = 'none';
+            viewLogin.style.display = 'block';
+        });
+
+        function setStatus(id, type, text) {
+            const el = document.getElementById(id);
+            el.className = 'status-message ' + type;
+            el.textContent = text;
+        }
+
+        async function handleLogin() {
+            const email    = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+            if (!email || !password) {
+                setStatus('login-status', 'error', 'Bitte E-Mail und Passwort eingeben.');
+                return;
+            }
+            const btn = document.getElementById('login-btn');
+            btn.disabled = true;
+            setStatus('login-status', 'loading', 'Anmeldung läuft…');
+            try {
+                await loginUser(email, password);
+                setStatus('login-status', 'success', 'Erfolgreich angemeldet! Weiterleitung…');
+                setTimeout(() => { window.location.href = './editor.html'; }, 800);
+            } catch (err) {
+                btn.disabled = false;
+                if (err.message && err.message.includes('Invalid login credentials')) {
+                    setStatus('login-status', 'error', 'E-Mail oder Passwort falsch.');
+                } else {
+                    setStatus('login-status', 'error', 'Fehler: ' + (err.message || 'Unbekannter Fehler'));
+                }
+            }
+        }
+
+        async function handleRegister() {
+            const email    = document.getElementById('reg-email').value.trim();
+            const password = document.getElementById('reg-password').value;
+            const password2 = document.getElementById('reg-password2').value;
+            if (!email || !password || !password2) {
+                setStatus('register-status', 'error', 'Bitte alle Felder ausfüllen.');
+                return;
+            }
+            if (password !== password2) {
+                setStatus('register-status', 'error', 'Passwörter stimmen nicht überein.');
+                return;
+            }
+            if (password.length < 6) {
+                setStatus('register-status', 'error', 'Passwort muss mindestens 6 Zeichen haben.');
+                return;
+            }
+            const btn = document.getElementById('register-btn');
+            btn.disabled = true;
+            setStatus('register-status', 'loading', 'Konto wird erstellt…');
+            try {
+                const { data, error } = await authClient.auth.signUp({ email, password });
+                if (error) throw error;
+                if (data.session) {
+                    setStatus('register-status', 'success', 'Konto erstellt! Weiterleitung…');
+                    setTimeout(() => { window.location.href = './editor.html'; }, 800);
+                } else {
+                    setStatus('register-status', 'success', 'Konto erstellt! Du kannst dich jetzt anmelden.');
+                    btn.disabled = false;
+                }
+            } catch (err) {
+                btn.disabled = false;
+                setStatus('register-status', 'error', 'Fehler: ' + (err.message || 'Unbekannter Fehler'));
+            }
+        }
+
+        document.getElementById('login-btn').addEventListener('click', handleLogin);
+        document.getElementById('login-password').addEventListener('keydown', (e) => { if (e.key === 'Enter') handleLogin(); });
+        document.getElementById('login-email').addEventListener('input', () => { document.getElementById('login-status').className = 'status-message'; });
+        document.getElementById('login-password').addEventListener('input', () => { document.getElementById('login-status').className = 'status-message'; });
+
+        document.getElementById('register-btn').addEventListener('click', handleRegister);
+        document.getElementById('reg-password2').addEventListener('keydown', (e) => { if (e.key === 'Enter') handleRegister(); });
+
+        (async () => {
+            const { data: { session } } = await authClient.auth.getSession();
+            if (session) window.location.href = './editor.html';
+        })();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor – Digitale Visitenkarte</title>
+    <link rel="icon" href="./img/favicon.png">
+    <link rel="stylesheet" href="./style-admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body class="editor-page">
+
+    <header class="editor-header">
+        <div class="editor-header-inner">
+            <span class="editor-header-title">Visitenkarte bearbeiten</span>
+            <div class="editor-header-actions">
+                <button id="preview-btn" class="editor-preview-btn">Vorschau</button>
+                <button id="logout-btn" class="editor-logout-btn">Abmelden</button>
+                <button id="save-btn" class="editor-save-btn">Speichern</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="editor-main">
+
+        <div class="editor-link-display">
+            <span class="editor-link-label">Dein Link</span>
+            <span class="editor-link-url" id="public-link-url"></span>
+            <button class="editor-link-copy-btn" id="copy-link-btn" title="Link kopieren">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+            </button>
+        </div>
+
+        <section class="editor-section">
+            <h2 class="editor-section-title">Profil</h2>
+            <div class="editor-section-body">
+                <div class="editor-profile-image-wrap">
+                    <div class="editor-profile-img-circle" id="profile-img-circle">
+                        <img id="profile-image-preview" src="" alt="">
+                        <div class="editor-profile-img-placeholder" id="profile-img-placeholder">Kein Bild</div>
+                    </div>
+                    <button type="button" class="editor-change-image-btn" id="change-image-btn">Bild ändern</button>
+                    <input type="file" id="profile-image-upload" accept="image/*" style="display:none;">
+                </div>
+                <div class="field-group">
+                    <label>Name</label>
+                    <input type="text" id="profile-name" placeholder="Dein Name oder Kanal-Name">
+                </div>
+                <div class="field-group">
+                    <label>Beschreibung</label>
+                    <textarea id="profile-description" rows="3" placeholder="Kurze Bio oder Tagline…"></textarea>
+                </div>
+            </div>
+        </section>
+
+        <section class="editor-section">
+            <div class="editor-section-header">
+                <h2 class="editor-section-title">Social Icons</h2>
+                <button type="button" id="add-social-btn" class="editor-add-btn">+ Hinzufügen</button>
+            </div>
+            <p class="editor-section-hint">Die kleinen Icon-Buttons unter deinem Profilbild.</p>
+            <div id="social-icons-list" class="editor-list"></div>
+        </section>
+
+        <section class="editor-section">
+            <div class="editor-section-header collapsible-trigger" data-target="video-body">
+                <div class="collapsible-header-left">
+                    <h2 class="editor-section-title">Video-Modul</h2>
+                    <p class="editor-section-hint">Hervorgehobene Karte oben (z.B. neuestes YouTube-Video).</p>
+                </div>
+                <div class="collapsible-header-right">
+                    <div class="field-group field-group--inline field-group--no-margin" onclick="event.stopPropagation()">
+                        <label for="video-visible" class="toggle-label">Sichtbar</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="video-visible">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <span class="collapse-arrow"></span>
+                </div>
+            </div>
+            <div class="editor-section-body is-collapsed" id="video-body">
+                <div class="field-group">
+                    <label>Ziel-URL</label>
+                    <input type="url" id="video-url" placeholder="https://youtube.com/...">
+                </div>
+                <div class="field-group">
+                    <label>Thumbnail-Icon</label>
+                    <select id="video-thumbnail">
+                        <option value="./icons/youtube.png">YouTube</option>
+                        <option value="./icons/website.png">Website</option>
+                        <option value="./icons/insta.png">Instagram</option>
+                        <option value="./icons/tiktok.png">TikTok</option>
+                    </select>
+                </div>
+                <div class="field-group">
+                    <label>Titel</label>
+                    <input type="text" id="video-title" placeholder="z.B. Neuestes Video">
+                </div>
+                <div class="field-group">
+                    <label>Untertitel</label>
+                    <input type="text" id="video-subtitle" placeholder="z.B. YouTube • Titel des Videos">
+                </div>
+                <div class="field-group">
+                    <label>Button-Text</label>
+                    <input type="text" id="video-btn-text" placeholder="z.B. Jetzt ansehen">
+                </div>
+            </div>
+        </section>
+
+        <section class="editor-section">
+            <div class="editor-section-header collapsible-trigger" data-target="links-body">
+                <div class="collapsible-header-left">
+                    <h2 class="editor-section-title">Links</h2>
+                    <p class="editor-section-hint">Reihenfolge mit ↑ ↓ ändern. Ausgeblendete Links werden nicht angezeigt.</p>
+                </div>
+                <div class="collapsible-header-right">
+                    <button type="button" id="add-link-btn" class="editor-add-btn" onclick="event.stopPropagation()">+ Hinzufügen</button>
+                    <span class="collapse-arrow"></span>
+                </div>
+            </div>
+            <div class="editor-section-body is-collapsed" id="links-body">
+                <div id="links-list" class="editor-list"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <div class="save-toast" id="save-toast"></div>
+
+    <dialog id="logout-dialog" class="editor-dialog">
+        <h3 class="dialog-title">Ungespeicherte Änderungen</h3>
+        <p class="dialog-text">Du hast Änderungen gemacht, aber noch nicht gespeichert. Wenn du dich abmeldest, gehen alle deine Änderungen verloren. Was möchtest du tun?</p>
+        <div class="dialog-actions">
+            <button id="dialog-cancel-btn" class="dialog-btn dialog-btn--secondary">Abbrechen</button>
+            <button id="dialog-logout-btn" class="dialog-btn dialog-btn--danger">Trotzdem abmelden</button>
+            <button id="dialog-save-logout-btn" class="dialog-btn dialog-btn--primary">Speichern und abmelden</button>
+        </div>
+    </dialog>
+
+    <script src="./auth.js"></script>
+    <script src="./editor.js"></script>
+
+</body>
+</html>
