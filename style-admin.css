@@ -600,8 +600,81 @@ select option { background-color: rgb(40, 39, 42); }
 @media (max-width: 600px) {
     .editor-section { padding: 20px 16px; }
     .editor-image-row { flex-direction: column; align-items: center; }
-    .editor-header-title { font-size: 0.95rem; }
     .editor-preview-btn { display: none; }
+}
+
+@media (max-width: 480px) {
+    body.editor-page {
+        overflow-x: hidden;
+    }
+
+    .editor-header {
+        padding: 10px 12px;
+    }
+
+    .editor-header-inner {
+        gap: 8px;
+    }
+
+    .editor-header-title {
+        font-size: 0.82rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-width: 0;
+        flex: 1;
+    }
+
+    .editor-header-actions {
+        gap: 6px;
+        flex-shrink: 0;
+    }
+
+    .editor-logout-btn {
+        padding: 7px 10px;
+        font-size: 0.78rem;
+    }
+
+    .editor-save-btn {
+        padding: 7px 12px;
+        font-size: 0.82rem;
+    }
+
+    .editor-main {
+        padding: 16px 12px 60px;
+        gap: 16px;
+    }
+
+    .editor-link-display {
+        padding: 10px 12px;
+    }
+
+    .editor-link-url {
+        font-size: 0.78rem;
+    }
+
+    .editor-section {
+        padding: 18px 14px;
+    }
+
+    .row-fields {
+        min-width: 0;
+    }
+
+    .editor-list-row {
+        padding: 10px;
+        gap: 8px;
+    }
+
+    .collapsible-header-right {
+        gap: 8px;
+    }
+
+    select,
+    input,
+    textarea {
+        font-size: 16px;
+    }
 }
 
 .login-secondary-btn {
