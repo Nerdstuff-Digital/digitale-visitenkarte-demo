@@ -600,7 +600,6 @@ select option { background-color: rgb(40, 39, 42); }
 @media (max-width: 600px) {
     .editor-section { padding: 20px 16px; }
     .editor-image-row { flex-direction: column; align-items: center; }
-    .editor-preview-btn { display: none; }
 }
 
 @media (max-width: 480px) {
@@ -612,17 +611,13 @@ select option { background-color: rgb(40, 39, 42); }
         padding: 10px 12px;
     }
 
-    .editor-header-inner {
-        gap: 8px;
+    .editor-header-title {
+        display: none;
     }
 
-    .editor-header-title {
-        font-size: 0.82rem;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        min-width: 0;
-        flex: 1;
+    .editor-header-inner {
+        gap: 6px;
+        justify-content: flex-end;
     }
 
     .editor-header-actions {
@@ -630,14 +625,19 @@ select option { background-color: rgb(40, 39, 42); }
         flex-shrink: 0;
     }
 
+    .editor-preview-btn {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
+
     .editor-logout-btn {
-        padding: 7px 10px;
-        font-size: 0.78rem;
+        padding: 8px 10px;
+        font-size: 0.8rem;
     }
 
     .editor-save-btn {
-        padding: 7px 12px;
-        font-size: 0.82rem;
+        padding: 8px 14px;
+        font-size: 0.85rem;
     }
 
     .editor-main {
@@ -1388,15 +1388,27 @@ body:has(.preview-banner[style*="block"]) .linktree-container {
 
 @media (max-width: 480px) {
     .pd-row {
-        gap: 20px;
+        gap: 16px;
+        justify-content: center;
     }
-    .pd-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
+    .pd-profile-side {
+        width: 90px;
+    }
+    .pd-img-circle {
+        width: 80px;
+        height: 80px;
     }
     .pd-current-tile {
-        width: 70px;
-        height: 50px;
+        width: 80px;
+        height: 80px;
+    }
+    .pd-design-side {
+        width: 130px;
+        flex-shrink: 0;
+    }
+    .pd-name-btn {
+        font-size: 0.75rem;
+        padding: 6px 10px;
     }
     .pd-row.design-open {
         flex-direction: column;
@@ -1404,16 +1416,18 @@ body:has(.preview-banner[style*="block"]) .linktree-container {
     }
     .pd-row.design-open .pd-profile-side {
         flex-direction: row;
+        width: auto;
         gap: 12px;
     }
     .pd-row.design-open .pd-img-circle {
         width: 48px;
         height: 48px;
     }
-    .pd-design-side {
+    .pd-row.design-open .pd-design-side {
         width: 100%;
     }
     .pd-grid {
         grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
     }
 }
