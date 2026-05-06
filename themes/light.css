@@ -1,0 +1,133 @@
+body.linktree-body {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background-attachment: fixed;
+    color: #2d3436;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Tahoma, sans-serif;
+}
+
+@media (min-width: 768px) {
+    .linktree-container {
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        border-radius: 24px;
+        padding: 50px 30px;
+    }
+}
+
+.linktree-container {
+    background-color: #ffffff;
+}
+
+.linktree-logo {
+    border: 4px solid #ffffff;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.linktree-title {
+    font-size: 1.7rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: #2d3436;
+}
+
+.linktree-desc {
+    color: #636e72;
+}
+
+.action-btn {
+    background-color: #ffffff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.action-btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+}
+
+.action-btn .custom-icon {
+    filter: invert(20%);
+    opacity: 0.75;
+}
+
+.social-icon {
+    background-color: #ffffff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+}
+
+.social-icon .custom-icon {
+    filter: invert(20%);
+    opacity: 0.8;
+}
+
+.featured-card {
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    color: #2d3436;
+}
+
+.featured-card:hover {
+    box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+}
+
+.featured-main-icon {
+    filter: invert(30%);
+    opacity: 0.7;
+}
+
+.featured-title {
+    color: #2d3436;
+    font-weight: 800;
+}
+
+.featured-subtitle {
+    color: #636e72;
+}
+
+.featured-action-btn {
+    background-color: #ff7675;
+    color: #ffffff;
+    border-radius: 30px;
+}
+
+.featured-action-btn:hover {
+    background-color: #d63031;
+    transform: scale(1.05);
+}
+
+.linktree-btn {
+    background-color: #ffffff;
+    color: #2d3436;
+    border-radius: 50px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+    border: 2px solid transparent;
+    font-weight: 600;
+}
+
+.linktree-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+    border-color: rgba(0,0,0,0.03);
+}
+
+.link-icon {
+    background-color: #f1f2f6;
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+}
+
+.button-icon {
+    filter: invert(20%);
+    opacity: 0.85;
+    width: 20px;
+    height: 20px;
+}
+
+.legal-footer {
+    color: #636e72;
+}

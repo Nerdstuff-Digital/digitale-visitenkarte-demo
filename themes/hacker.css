@@ -1,0 +1,234 @@
+body.linktree-body {
+    background-color: #000000;
+    color: #00ff41;
+    font-family: 'Courier New', Courier, monospace;
+    position: relative;
+    overflow-x: hidden;
+}
+
+body.linktree-body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(0,255,65,0.04) 50%, transparent 50%);
+    background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.6;
+}
+
+.linktree-container {
+    background-color: #000000;
+    border: 1px solid #00ff41;
+    box-shadow: 0 0 20px rgba(0,255,65,0.3), inset 0 0 30px rgba(0,255,65,0.04);
+    border-radius: 0;
+    position: relative;
+    z-index: 2;
+}
+
+.linktree-logo {
+    width: 110px;
+    height: 110px;
+    border-radius: 0;
+    border: 2px solid #00ff41;
+    box-shadow: 0 0 8px rgba(0,255,65,0.4);
+    filter: grayscale(80%) brightness(0.85);
+    transition: filter 0.4s ease, box-shadow 0.4s ease;
+    object-fit: cover;
+    background-color: #000000;
+}
+
+.linktree-logo:hover {
+    filter: grayscale(0%) brightness(1);
+    box-shadow: 0 0 18px rgba(0,255,65,0.8);
+}
+
+.linktree-title {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    color: #00ff41;
+    text-shadow: 0 0 6px rgba(0,255,65,0.6);
+    letter-spacing: 1px;
+    font-size: 1.4rem;
+}
+
+.linktree-title::before { content: '> '; }
+
+.linktree-desc {
+    color: #00ff41;
+    font-family: 'Courier New', Courier, monospace;
+    opacity: 0.85;
+    font-size: 0.9rem;
+}
+
+.action-btn {
+    background-color: transparent;
+    border: 1px solid #00ff41;
+    border-radius: 2px;
+    box-shadow: 0 0 5px rgba(0,255,65,0.3);
+}
+
+.action-btn:hover {
+    background-color: #00ff41;
+    box-shadow: 0 0 12px #00ff41;
+}
+
+.action-btn .custom-icon {
+    filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg) brightness(118%) contrast(119%);
+}
+
+.action-btn:hover .custom-icon {
+    filter: invert(0%) brightness(0%);
+}
+
+.social-icon {
+    background-color: transparent;
+    border: 1px solid #00ff41;
+    border-radius: 2px;
+    box-shadow: 0 0 5px rgba(0,255,65,0.3);
+    transition: all 0.2s ease;
+}
+
+.social-icon:hover {
+    background-color: #00ff41;
+    box-shadow: 0 0 15px #00ff41;
+    transform: translateY(-3px);
+}
+
+.social-icon .custom-icon {
+    filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg) brightness(118%) contrast(119%);
+    transition: filter 0.2s;
+}
+
+.social-icon:hover .custom-icon {
+    filter: invert(0%) brightness(0%);
+}
+
+.featured-card {
+    background-color: transparent;
+    border: 1px solid #00ff41;
+    border-radius: 2px;
+    color: #00ff41;
+    box-shadow: 0 0 8px rgba(0,255,65,0.3);
+    padding-top: 32px;
+    position: relative;
+}
+
+.featured-card::before {
+    content: '> ./play.sh';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0,255,65,0.15);
+    color: #00ff41;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    padding: 4px 12px;
+    text-align: left;
+    border-bottom: 1px solid #00ff41;
+    letter-spacing: 1px;
+}
+
+.featured-card:hover {
+    box-shadow: 0 0 18px rgba(0,255,65,0.6);
+}
+
+.featured-main-icon {
+    filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg) brightness(118%) contrast(119%);
+}
+
+.featured-title {
+    color: #00ff41;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    text-shadow: 0 0 6px rgba(0,255,65,0.5);
+    letter-spacing: 1px;
+}
+
+.featured-subtitle {
+    color: #00ff41;
+    opacity: 0.75;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.featured-action-btn {
+    background-color: transparent;
+    color: #00ff41;
+    border: 1px solid #00ff41;
+    border-radius: 2px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 0 5px rgba(0,255,65,0.3);
+}
+
+.featured-action-btn:hover {
+    background-color: #00ff41;
+    color: #000000;
+    box-shadow: 0 0 15px #00ff41;
+}
+
+.linktree-btn {
+    background-color: transparent;
+    color: #00ff41;
+    border: 1px solid #00ff41;
+    border-radius: 2px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    box-shadow: 0 0 5px rgba(0,255,65,0.3);
+    letter-spacing: 1px;
+}
+
+.linktree-btn:hover {
+    background-color: #00ff41;
+    color: #000000;
+    box-shadow: 0 0 15px #00ff41;
+    transform: translateX(4px);
+}
+
+.linktree-btn .link-icon {
+    border-right: 1px dashed rgba(0,255,65,0.6);
+    margin-right: 0;
+    padding-right: 12px;
+    width: auto;
+    min-width: 32px;
+}
+
+.linktree-btn:hover .link-icon {
+    border-right-color: rgba(0,0,0,0.6);
+}
+
+.button-icon {
+    filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg) brightness(118%) contrast(119%);
+    transition: filter 0.2s;
+}
+
+.linktree-btn:hover .button-icon {
+    filter: invert(0%) brightness(0%);
+}
+
+.btn-text {
+    text-align: left;
+    padding-left: 14px;
+    text-transform: lowercase;
+}
+
+.btn-text::before { content: '$ '; opacity: 0.6; }
+
+.legal-footer {
+    color: #00ff41;
+    font-family: 'Courier New', Courier, monospace;
+    opacity: 0.7;
+    letter-spacing: 1px;
+}
+
+.legal-footer a:hover {
+    color: #00ff41;
+    text-shadow: 0 0 6px rgba(0,255,65,0.6);
+    opacity: 1;
+}

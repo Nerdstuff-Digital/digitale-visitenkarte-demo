@@ -9,8 +9,61 @@ const AVAILABLE_ICONS = [
     { label: 'Affiliate',   path: './icons/affiliate.svg' },
 ];
 
+const THEMES = [
+    {
+        id: 'darkgreen', label: 'Dark Green',
+        tileStyle: 'background-color:#0d1f15; border:2px solid rgba(255,255,255,0.3); background-image:linear-gradient(to bottom,rgba(255,255,255,0.08) 0%,transparent 60%);',
+    },
+    {
+        id: 'light', label: 'Light',
+        tileStyle: 'background:linear-gradient(120deg,#fdfbfb 0%,#c3cfe2 100%); border:2px solid rgba(0,0,0,0.12);',
+    },
+    {
+        id: 'dark-minimal', label: 'Dark Minimal',
+        tileStyle: 'background-color:#0a0a0a; border:2px solid #444; background-image:linear-gradient(to bottom,rgba(255,255,255,0.04) 0%,transparent 100%);',
+    },
+    {
+        id: 'cyberpunk', label: 'Cyberpunk',
+        tileStyle: 'background-color:#050508; border:2px solid #00f3ff; background-image:linear-gradient(rgba(0,243,255,0.06) 1px,transparent 1px),linear-gradient(90deg,rgba(0,243,255,0.06) 1px,transparent 1px); background-size:8px 8px; box-shadow:0 0 10px rgba(0,243,255,0.5);',
+    },
+    {
+        id: 'cosplay', label: 'Cosplay',
+        tileStyle: 'background:linear-gradient(-45deg,#ffb8d1,#e2b0ff,#9fb8ff); border:2px solid rgba(255,255,255,0.5);',
+    },
+    {
+        id: 'fantasy', label: 'Fantasy',
+        tileStyle: 'background-color:#110c1c; background-image:radial-gradient(circle at center,#2b1d44 0%,#110c1c 80%); border:2px solid #d4af37; box-shadow:0 0 8px rgba(212,175,55,0.3);',
+    },
+    {
+        id: 'bricks', label: 'Bricks',
+        tileStyle: 'background-color:#e53935; border:2px solid #b71c1c; background-image:radial-gradient(#e53935 20%,transparent 20%),radial-gradient(#b71c1c 40%,transparent 40%); background-size:10px 10px; background-position:0 0,1px 1px;',
+    },
+    {
+        id: 'arcade', label: 'Arcade',
+        tileStyle: 'background-color:#000; border:2px solid #fbc02d; background-image:linear-gradient(rgba(255,255,255,0.06) 1px,transparent 1px); background-size:100% 4px; box-shadow:3px 3px 0 #00e5ff, inset 0 0 12px rgba(233,30,99,0.5);',
+    },
+    {
+        id: 'tcg', label: 'TCG',
+        tileStyle: 'background-color:#161b22; border:2px solid #a8b2bd; background-image:linear-gradient(115deg,transparent 20%,rgba(255,0,0,0.3) 30%,rgba(255,255,0,0.3) 45%,rgba(0,255,255,0.3) 60%,rgba(255,0,255,0.3) 75%,transparent 85%); border-radius:6px;',
+    },
+    {
+        id: 'manga', label: 'Manga',
+        tileStyle: 'background-color:#fff; border:3px solid #000; background-image:radial-gradient(#000 15%,transparent 16%),radial-gradient(#000 15%,transparent 16%); background-size:7px 7px; background-position:0 0,3.5px 3.5px; box-shadow:4px 4px 0 #e60000;',
+    },
+    {
+        id: 'steampunk', label: 'Steampunk',
+        tileStyle: 'background-color:#2b1d14; border:3px solid #b58231; background-image:radial-gradient(circle at 5px 5px,#8b5a2b 3px,transparent 4px),radial-gradient(circle at calc(100% - 5px) calc(100% - 5px),#8b5a2b 3px,transparent 4px); box-shadow:inset 0 0 10px rgba(0,0,0,0.8);',
+    },
+    {
+        id: 'hacker', label: 'Hacker',
+        tileStyle: 'background-color:#000; border:2px solid #00ff41; background-image:linear-gradient(rgba(0,255,65,0.08) 1px,transparent 1px); background-size:100% 4px; box-shadow:0 0 10px rgba(0,255,65,0.4);',
+    },
+];
+
 let currentProfileId = null;
 let currentImageUrl = '';
+let currentTheme = 'darkgreen';
+let designGridOpen = false;
 let isDirty = false;
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -18,6 +71,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!session) return;
     setupPublicLink();
     setupCollapsibles();
+    buildThemeGrid();
     await loadEditorData();
     setupStaticListeners();
     setupDirtyTracking();
@@ -27,9 +81,7 @@ function setupPublicLink() {
     const url = window.location.origin + '/index.html';
     document.getElementById('public-link-url').textContent = url;
     document.getElementById('copy-link-btn').addEventListener('click', () => {
-        navigator.clipboard.writeText(url).then(() => {
-            showToast('Link kopiert!', 'success');
-        });
+        navigator.clipboard.writeText(url).then(() => showToast('Link kopiert!', 'success'));
     });
 }
 
@@ -51,22 +103,113 @@ function setupDirtyTracking() {
     document.querySelector('.editor-main').addEventListener('change', () => { isDirty = true; });
 }
 
+function getThemeById(id) {
+    return THEMES.find(t => t.id === id) || THEMES[0];
+}
+
+function applyTileStyle(el, themeId) {
+    const theme = getThemeById(themeId);
+    el.removeAttribute('style');
+    el.setAttribute('style', theme.tileStyle);
+}
+
+function buildThemeGrid() {
+    const grid = document.getElementById('pd-grid');
+    THEMES.forEach(theme => {
+        const tile = document.createElement('button');
+        tile.type = 'button';
+        tile.className = 'pd-tile';
+        tile.dataset.themeId = theme.id;
+        tile.title = theme.label;
+
+        const preview = document.createElement('div');
+        preview.className = 'pd-tile-preview';
+        preview.setAttribute('style', theme.tileStyle);
+
+        const label = document.createElement('span');
+        label.className = 'pd-tile-label';
+        label.textContent = theme.label;
+
+        tile.appendChild(preview);
+        tile.appendChild(label);
+
+        tile.addEventListener('click', () => {
+            currentTheme = theme.id;
+            updateCurrentTile();
+            updateTileSelection();
+            isDirty = true;
+        });
+
+        grid.appendChild(tile);
+    });
+}
+
+function updateCurrentTile() {
+    const tile = document.getElementById('pd-current-tile');
+    const name = document.getElementById('pd-current-name');
+    const theme = getThemeById(currentTheme);
+    applyTileStyle(tile, currentTheme);
+    name.textContent = theme.label;
+}
+
+function updateTileSelection() {
+    document.querySelectorAll('.pd-tile').forEach(tile => {
+        tile.classList.toggle('is-active', tile.dataset.themeId === currentTheme);
+    });
+}
+
+function toggleDesignGrid() {
+    designGridOpen = !designGridOpen;
+    const gridWrap = document.getElementById('pd-grid-wrap');
+    const row = document.getElementById('pd-row');
+    const toggleBtn = document.getElementById('pd-toggle-btn');
+    const changeBtn = document.getElementById('change-image-btn');
+
+    gridWrap.classList.toggle('is-open', designGridOpen);
+    row.classList.toggle('design-open', designGridOpen);
+    toggleBtn.classList.toggle('is-open', designGridOpen);
+    changeBtn.style.display = designGridOpen ? 'none' : '';
+}
+
 async function loadEditorData() {
     const client = await getAuthenticatedClient();
-    const { data, error } = await client
+    const { data: { user } } = await client.auth.getUser();
+
+    if (!user) { showToast('Nicht eingeloggt.', 'error'); return; }
+
+    let { data, error } = await client
         .from('profiles')
         .select('id, tree_data')
+        .eq('user_id', user.id)
         .limit(1)
         .single();
 
-    if (error || !data) {
-        showToast('Ladefehler: ' + (error ? error.message : 'Kein Datensatz gefunden'), 'error');
+    if (error && error.code === 'PGRST116') {
+        const empty = {
+            theme: 'darkgreen',
+            profile: { name: '', description: '', image: '' },
+            socialIcons: [],
+            videoModule: { isVisible: false, url: '', thumbnail: './icons/youtube.png', title: '', subtitle: '', buttonText: 'Jetzt ansehen' },
+            links: [],
+        };
+        const { data: inserted, error: insertError } = await client
+            .from('profiles')
+            .insert({ user_id: user.id, tree_data: empty })
+            .select('id, tree_data')
+            .single();
+        if (insertError) { showToast('Profil konnte nicht erstellt werden: ' + insertError.message, 'error'); return; }
+        data = inserted;
+    } else if (error) {
+        showToast('Ladefehler: ' + error.message, 'error');
         return;
     }
 
     currentProfileId = data.id;
     const td = data.tree_data || {};
 
+    currentTheme = td.theme || 'darkgreen';
+    updateCurrentTile();
+    updateTileSelection();
     populateProfile(td.profile || {});
     populateSocialIcons(td.socialIcons || []);
     populateVideoModule(td.videoModule || {});
@@ -89,7 +232,7 @@ function populateSocialIcons(icons) {
 }
 
 function populateVideoModule(video) {
-    document.getElementById('video-visible').checked = video.isVisible  === true;
+    document.getElementById('video-visible').checked  = video.isVisible  === true;
     document.getElementById('video-url').value        = video.url        || '';
     document.getElementById('video-title').value      = video.title      || '';
     document.getElementById('video-subtitle').value   = video.subtitle   || '';
@@ -108,35 +251,19 @@ function appendSocialIconRow(container, data, index) {
     row.className = 'editor-list-row';
     row.dataset.index = index;
     row.innerHTML = `
-        <div class="row-icon-preview">
-            <img src="${data.icon || ''}" alt="">
-        </div>
+        <div class="row-icon-preview"><img src="${data.icon || ''}" alt=""></div>
         <div class="row-fields">
-            <div class="field-group">
-                <label>Icon</label>
-                ${buildIconSelect('social-icon-' + index, data.icon || '')}
-            </div>
-            <div class="field-group">
-                <label>URL</label>
-                <input type="url" class="social-url" placeholder="https://..." value="${escHtml(data.url || '')}">
-            </div>
+            <div class="field-group"><label>Icon</label>${buildIconSelect('social-icon-' + index, data.icon || '')}</div>
+            <div class="field-group"><label>URL</label><input type="url" class="social-url" placeholder="https://..." value="${escHtml(data.url || '')}"></div>
         </div>
         <button type="button" class="row-remove-btn" title="Entfernen">✕</button>
     `;
     const previewImg = row.querySelector('.row-icon-preview img');
     const select = row.querySelector('select');
-    select.addEventListener('change', () => {
-        previewImg.style.opacity = '1';
-        previewImg.src = select.value;
-        isDirty = true;
-    });
+    select.addEventListener('change', () => { previewImg.style.opacity = '1'; previewImg.src = select.value; isDirty = true; });
     previewImg.addEventListener('error', () => { previewImg.style.opacity = '0'; });
-    previewImg.addEventListener('load', () => { previewImg.style.opacity = '1'; });
-    row.querySelector('.row-remove-btn').addEventListener('click', () => {
-        row.remove();
-        reindexRows(container, 'social-icon-');
-        isDirty = true;
-    });
+    previewImg.addEventListener('load',  () => { previewImg.style.opacity = '1'; });
+    row.querySelector('.row-remove-btn').addEventListener('click', () => { row.remove(); reindexRows(container, 'social-icon-'); isDirty = true; });
     container.appendChild(row);
 }
 
@@ -146,22 +273,11 @@ function appendLinkRow(container, data, index) {
     row.className = 'editor-list-row' + (isVisible ? '' : ' row-hidden');
     row.dataset.index = index;
     row.innerHTML = `
-        <div class="row-icon-preview">
-            <img src="${data.icon || ''}" alt="">
-        </div>
+        <div class="row-icon-preview"><img src="${data.icon || ''}" alt=""></div>
         <div class="row-fields">
-            <div class="field-group">
-                <label>Icon</label>
-                ${buildIconSelect('link-icon-' + index, data.icon || '')}
-            </div>
-            <div class="field-group">
-                <label>Link-Titel</label>
-                <input type="text" class="link-title" placeholder="z.B. Meine Webseite" value="${escHtml(data.title || '')}">
-            </div>
-            <div class="field-group">
-                <label>URL</label>
-                <input type="url" class="link-url" placeholder="https://..." value="${escHtml(data.url || '')}">
-            </div>
+            <div class="field-group"><label>Icon</label>${buildIconSelect('link-icon-' + index, data.icon || '')}</div>
+            <div class="field-group"><label>Link-Titel</label><input type="text" class="link-title" placeholder="z.B. Meine Webseite" value="${escHtml(data.title || '')}"></div>
+            <div class="field-group"><label>URL</label><input type="url" class="link-url" placeholder="https://..." value="${escHtml(data.url || '')}"></div>
         </div>
         <div class="row-actions">
             <button type="button" class="row-move-btn" data-dir="up" title="Nach oben">↑</button>
@@ -175,31 +291,15 @@ function appendLinkRow(container, data, index) {
     `;
     const previewImg = row.querySelector('.row-icon-preview img');
     const select = row.querySelector('select');
-    select.addEventListener('change', () => {
-        previewImg.style.opacity = '1';
-        previewImg.src = select.value;
-        isDirty = true;
-    });
+    select.addEventListener('change', () => { previewImg.style.opacity = '1'; previewImg.src = select.value; isDirty = true; });
     previewImg.addEventListener('error', () => { previewImg.style.opacity = '0'; });
-    previewImg.addEventListener('load', () => { previewImg.style.opacity = '1'; });
-    const visibleToggle = row.querySelector('.link-visible');
-    visibleToggle.addEventListener('change', () => {
-        row.classList.toggle('row-hidden', !visibleToggle.checked);
-        isDirty = true;
-    });
-    row.querySelector('.row-remove-btn').addEventListener('click', () => {
-        row.remove();
-        reindexRows(container, 'link-icon-');
-        isDirty = true;
-    });
+    previewImg.addEventListener('load',  () => { previewImg.style.opacity = '1'; });
+    row.querySelector('.link-visible').addEventListener('change', e => { row.classList.toggle('row-hidden', !e.target.checked); isDirty = true; });
+    row.querySelector('.row-remove-btn').addEventListener('click', () => { row.remove(); reindexRows(container, 'link-icon-'); isDirty = true; });
     row.querySelectorAll('.row-move-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            const dir = btn.dataset.dir;
-            if (dir === 'up' && row.previousElementSibling) {
-                container.insertBefore(row, row.previousElementSibling);
-            } else if (dir === 'down' && row.nextElementSibling) {
-                container.insertBefore(row.nextElementSibling, row);
-            }
+            if (btn.dataset.dir === 'up' && row.previousElementSibling)  container.insertBefore(row, row.previousElementSibling);
+            if (btn.dataset.dir === 'down' && row.nextElementSibling)    container.insertBefore(row.nextElementSibling, row);
             reindexRows(container, 'link-icon-');
             isDirty = true;
         });
@@ -216,8 +316,7 @@ function buildIconSelect(name, currentValue) {
         options.push(`<option value="">– Icon wählen –</option>`);
     }
     AVAILABLE_ICONS.forEach(icon => {
-        const selected = icon.path === currentValue ? 'selected' : '';
-        options.push(`<option value="${icon.path}" ${selected}>${icon.label}</option>`);
+        options.push(`<option value="${icon.path}" ${icon.path === currentValue ? 'selected' : ''}>${icon.label}</option>`);
     });
     return `<select name="${name}">${options.join('')}</select>`;
 }
@@ -253,24 +352,19 @@ function updateImagePreview(url) {
 function collectFormData() {
     const socialIcons = [];
     document.querySelectorAll('#social-icons-list .editor-list-row').forEach(row => {
-        socialIcons.push({
-            icon: row.querySelector('select').value,
-            url:  row.querySelector('.social-url').value.trim(),
-        });
+        socialIcons.push({ icon: row.querySelector('select').value, url: row.querySelector('.social-url').value.trim() });
     });
-
     const links = [];
     document.querySelectorAll('#links-list .editor-list-row').forEach(row => {
-        const visibleCheckbox = row.querySelector('.link-visible');
         links.push({
             icon:      row.querySelector('select').value,
             title:     row.querySelector('.link-title').value.trim(),
             url:       row.querySelector('.link-url').value.trim(),
-            isVisible: visibleCheckbox ? visibleCheckbox.checked : true,
+            isVisible: row.querySelector('.link-visible').checked,
         });
     });
-
     return {
+        theme: currentTheme,
         profile: {
             name:        document.getElementById('profile-name').value.trim(),
             description: document.getElementById('profile-description').value.trim(),
@@ -290,29 +384,16 @@ function collectFormData() {
 }
 
 async function saveData() {
-    if (!currentProfileId) {
-        showToast('Kein Profil geladen. Bitte melde dich mit echten Zugangsdaten an.', 'error');
-        return false;
-    }
+    if (!currentProfileId) { showToast('Kein Profil geladen. Bitte mit echtem Login anmelden.', 'error'); return false; }
     const saveBtn = document.getElementById('save-btn');
     saveBtn.disabled = true;
     saveBtn.textContent = 'Speichert…';
-
     const treeData = collectFormData();
     const client = await getAuthenticatedClient();
-    const { error } = await client
-        .from('profiles')
-        .update({ tree_data: treeData })
-        .eq('id', currentProfileId);
-
+    const { error } = await client.from('profiles').update({ tree_data: treeData }).eq('id', currentProfileId);
     saveBtn.disabled = false;
     saveBtn.textContent = 'Speichern';
-
-    if (error) {
-        showToast('Fehler: ' + error.message, 'error');
-        return false;
-    }
-
+    if (error) { showToast('Fehler: ' + error.message, 'error'); return false; }
     isDirty = false;
     showToast('Erfolgreich gespeichert!', 'success');
     return true;
@@ -323,20 +404,8 @@ async function handleImageUpload(file) {
     showToast('Bild wird hochgeladen…', 'loading');
     const client = await getAuthenticatedClient();
     const ext = file.name.split('.').pop();
-    const fileName = 'profile-' + Date.now() + '.' + ext;
-    const { data, error } = await client.storage
-        .from('visitenkarte')
-        .upload(fileName, file, { upsert: true });
-
-    if (error) {
-        if (error.message && error.message.includes('row-level security')) {
-            showToast('Bitte mit echtem Login anmelden für Uploads.', 'error');
-        } else {
-            showToast('Upload fehlgeschlagen: ' + error.message, 'error');
-        }
-        return;
-    }
-
+    const { data, error } = await client.storage.from('visitenkarte').upload('profile-' + Date.now() + '.' + ext, file, { upsert: true });
+    if (error) { showToast('Upload fehlgeschlagen: ' + error.message, 'error'); return; }
     const { data: urlData } = client.storage.from('visitenkarte').getPublicUrl(data.path);
     currentImageUrl = urlData.publicUrl;
     updateImagePreview(currentImageUrl);
@@ -354,61 +423,37 @@ function showToast(message, type) {
 
 function setupStaticListeners() {
     document.getElementById('save-btn').addEventListener('click', saveData);
-
     document.getElementById('preview-btn').addEventListener('click', () => {
-        const data = collectFormData();
-        localStorage.setItem('visitenkarte_preview', JSON.stringify(data));
+        localStorage.setItem('visitenkarte_preview', JSON.stringify(collectFormData()));
         window.open('./vorschau.html', '_blank');
     });
-
     document.getElementById('logout-btn').addEventListener('click', () => {
         if (!isDirty) { logoutUser(); return; }
         document.getElementById('logout-dialog').showModal();
     });
-
-    document.getElementById('dialog-cancel-btn').addEventListener('click', () => {
-        document.getElementById('logout-dialog').close();
-    });
-
-    document.getElementById('dialog-logout-btn').addEventListener('click', () => {
-        logoutUser();
-    });
-
-    document.getElementById('dialog-save-logout-btn').addEventListener('click', async () => {
-        const saved = await saveData();
-        if (saved !== false) logoutUser();
-    });
-
-    document.getElementById('change-image-btn').addEventListener('click', () => {
-        document.getElementById('profile-image-upload').click();
-    });
-
-    document.getElementById('profile-image-upload').addEventListener('change', e => {
-        if (e.target.files[0]) handleImageUpload(e.target.files[0]);
-    });
-
+    document.getElementById('dialog-cancel-btn').addEventListener('click', () => { document.getElementById('logout-dialog').close(); });
+    document.getElementById('dialog-logout-btn').addEventListener('click', () => { logoutUser(); });
+    document.getElementById('dialog-save-logout-btn').addEventListener('click', async () => { if (await saveData() !== false) logoutUser(); });
+    document.getElementById('pd-toggle-btn').addEventListener('click', toggleDesignGrid);
+    document.getElementById('change-image-btn').addEventListener('click', () => { document.getElementById('profile-image-upload').click(); });
+    document.getElementById('profile-image-upload').addEventListener('change', e => { if (e.target.files[0]) handleImageUpload(e.target.files[0]); });
     document.getElementById('add-social-btn').addEventListener('click', () => {
-        const container = document.getElementById('social-icons-list');
-        appendSocialIconRow(container, { icon: '', url: '' }, container.children.length);
+        const c = document.getElementById('social-icons-list');
+        appendSocialIconRow(c, { icon: '', url: '' }, c.children.length);
         isDirty = true;
     });
-
     document.getElementById('add-link-btn').addEventListener('click', () => {
-        const container = document.getElementById('links-list');
+        const c = document.getElementById('links-list');
         const body = document.getElementById('links-body');
         if (body.classList.contains('is-collapsed')) {
             body.classList.remove('is-collapsed');
             document.querySelector('[data-target="links-body"]').classList.add('is-open');
         }
-        appendLinkRow(container, { icon: '', title: '', url: '', isVisible: true }, container.children.length);
+        appendLinkRow(c, { icon: '', title: '', url: '', isVisible: true }, c.children.length);
         isDirty = true;
     });
 }
 
 function escHtml(str) {
-    return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/"/g, '&quot;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
+    return String(str).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }

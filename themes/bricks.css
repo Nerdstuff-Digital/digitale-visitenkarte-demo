@@ -1,0 +1,196 @@
+body.linktree-body {
+    background-color: #e6e8eb;
+    background-image: radial-gradient(#d5dae0 1.5px, transparent 1.5px);
+    background-size: 28px 28px;
+    color: #000000;
+    font-family: 'Arial Rounded MT Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.linktree-container {
+    background-color: #bcc0c4;
+    border: 2px solid #9ca2a8;
+    background-image:
+        radial-gradient(#bcc0c4 20%, transparent 20%),
+        radial-gradient(#9ca2a8 40%, transparent 40%);
+    background-size: 16px 16px;
+    background-position: 0 0, 1px 1px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    padding: 50px 25px;
+    border-radius: 12px;
+}
+
+.linktree-logo {
+    border: 4px solid #ffffff;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+}
+
+.linktree-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #000000;
+    letter-spacing: -0.5px;
+    text-shadow: 0 0 8px rgba(255,255,255,0.9), 0 0 4px rgba(255,255,255,1);
+}
+
+.linktree-desc {
+    color: #000000;
+    font-weight: 700;
+    text-shadow: 0 0 8px rgba(255,255,255,0.9);
+}
+
+.action-btn {
+    background-color: rgba(251,192,45,0.95);
+    border: 2px solid #f57f17;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+}
+
+.action-btn:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 rgba(0,0,0,0.1);
+}
+
+.action-btn .custom-icon {
+    filter: brightness(0%);
+}
+
+.social-icon {
+    border: 2px solid;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+    transition: all 0.2s ease;
+}
+
+.social-icon:hover {
+    transform: scale(1.1) translateY(-3px);
+    box-shadow: 0 6px 0 rgba(0,0,0,0.25);
+}
+
+.social-icon:active {
+    transform: scale(1.05) translateY(1px);
+    box-shadow: 0 1px 0 rgba(0,0,0,0.15);
+}
+
+.social-icons-row .social-icon:nth-child(3n+1) {
+    background-color: #e53935;
+    border-color: #b71c1c;
+}
+
+.social-icons-row .social-icon:nth-child(3n+2) {
+    background-color: #1e88e5;
+    border-color: #0d47a1;
+}
+
+.social-icons-row .social-icon:nth-child(3n) {
+    background-color: #43a047;
+    border-color: #1b5e20;
+}
+
+.social-icon .custom-icon {
+    filter: invert(100%);
+}
+
+.featured-card {
+    background-color: #fbc02d;
+    border: 3px solid #f57f17;
+    color: #000000;
+    box-shadow: 0 6px 0 rgba(0,0,0,0.2);
+    border-radius: 12px;
+}
+
+.featured-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 9px 0 rgba(0,0,0,0.25);
+}
+
+.featured-main-icon {
+    filter: brightness(0%);
+}
+
+.featured-title {
+    color: #000000;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.featured-subtitle {
+    color: #000000;
+    font-weight: 700;
+    opacity: 0.85;
+}
+
+.featured-action-btn {
+    background-color: #e53935;
+    color: #ffffff;
+    border: 2px solid #b71c1c;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+    border-radius: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.featured-action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 rgba(0,0,0,0.25);
+}
+
+.linktree-btn {
+    color: #ffffff;
+    border-radius: 12px;
+    font-weight: 700;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+    border: 3px solid;
+}
+
+.linktree-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 0 rgba(0,0,0,0.25);
+}
+
+.linktree-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 rgba(0,0,0,0.15);
+}
+
+.linktree-links .linktree-btn:nth-child(4n+1) {
+    background-color: #e53935;
+    border-color: #b71c1c;
+}
+
+.linktree-links .linktree-btn:nth-child(4n+2) {
+    background-color: #1e88e5;
+    border-color: #0d47a1;
+}
+
+.linktree-links .linktree-btn:nth-child(4n+3) {
+    background-color: #fbc02d;
+    border-color: #f57f17;
+    color: #000000;
+}
+
+.linktree-links .linktree-btn:nth-child(4n) {
+    background-color: #43a047;
+    border-color: #1b5e20;
+}
+
+.link-icon {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: inset 0 2px 2px rgba(0,0,0,0.2);
+    width: 38px;
+    height: 38px;
+}
+
+.button-icon {
+    filter: brightness(0%);
+}
+
+.legal-footer {
+    color: #000000;
+    font-weight: 700;
+    opacity: 0.75;
+    text-shadow: 0 0 8px rgba(255,255,255,0.9);
+}
+
+.legal-footer a:hover {
+    color: #1e88e5;
+}

@@ -1,0 +1,166 @@
+body.linktree-body {
+    background-color: #050508;
+    background-image:
+        linear-gradient(rgba(0,243,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,243,255,0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+    color: #ffffff;
+    font-family: "Courier New", Courier, monospace;
+}
+
+@media (min-width: 768px) {
+    .linktree-container {
+        background-color: #050508;
+        border: 2px solid #00f3ff;
+        box-shadow: 0 0 20px rgba(0,243,255,0.15), inset 0 0 10px rgba(0,243,255,0.05);
+        border-radius: 0;
+    }
+}
+
+.linktree-logo {
+    border: 2px solid #ff00ff;
+    border-radius: 0;
+    box-shadow: 5px 5px 0 rgba(255,0,255,0.4);
+}
+
+.linktree-title {
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-shadow: 0 0 8px #00f3ff;
+    color: #ffffff;
+}
+
+.linktree-desc {
+    color: #00f3ff;
+    border-left: 3px solid #00f3ff;
+    padding-left: 12px;
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+.action-btn {
+    background: transparent;
+    border: 2px solid #00f3ff;
+    box-shadow: 0 0 5px #00f3ff;
+    border-radius: 0;
+}
+
+.action-btn:hover {
+    background-color: #00f3ff;
+    box-shadow: 0 0 15px #00f3ff;
+}
+
+.action-btn .custom-icon {
+    filter: invert(100%);
+}
+
+.action-btn:hover .custom-icon {
+    filter: invert(0%);
+}
+
+.social-icon {
+    border: 2px solid #00f3ff;
+    border-radius: 0;
+    background: transparent;
+    transition: all 0.2s ease;
+}
+
+.social-icon:hover {
+    background-color: #00f3ff;
+    box-shadow: 0 0 15px #00f3ff;
+    transform: scale(1.05);
+}
+
+.social-icon .custom-icon {
+    filter: invert(100%);
+    transition: filter 0.2s;
+}
+
+.social-icon:hover .custom-icon {
+    filter: invert(0%);
+}
+
+.featured-card {
+    background-color: rgba(0,243,255,0.05);
+    border: 2px solid #00f3ff;
+    border-radius: 0;
+    box-shadow: 0 0 10px rgba(0,243,255,0.2);
+}
+
+.featured-main-icon {
+    filter: invert(85%) sepia(20%) saturate(5000%) hue-rotate(150deg) brightness(105%);
+}
+
+.featured-title {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 0 8px #00f3ff;
+    color: #ffffff;
+}
+
+.featured-subtitle {
+    color: #00f3ff;
+}
+
+.featured-action-btn {
+    background: transparent;
+    border: 2px solid #00f3ff;
+    color: #00f3ff;
+    border-radius: 0;
+    text-transform: uppercase;
+    box-shadow: 0 0 8px rgba(0,243,255,0.3);
+}
+
+.featured-action-btn:hover {
+    background-color: #00f3ff;
+    color: #050508;
+}
+
+.linktree-btn {
+    background-color: rgba(0,243,255,0.05);
+    color: #ffffff;
+    border: 2px solid #00f3ff;
+    border-radius: 0;
+    font-weight: bold;
+    text-transform: uppercase;
+    box-shadow: 0 0 8px rgba(0,243,255,0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.linktree-btn:hover {
+    background-color: rgba(0,243,255,0.15);
+    box-shadow: 0 0 15px #00f3ff, inset 0 0 10px #00f3ff;
+}
+
+.linktree-btn::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background-color: #00f3ff;
+}
+
+.linktree-btn:hover::before {
+    background-color: #ff00ff;
+}
+
+.button-icon {
+    filter: invert(100%);
+}
+
+.btn-text {
+    text-align: left;
+    letter-spacing: 1px;
+}
+
+.legal-footer {
+    color: #00f3ff;
+}
+
+.legal-footer a:hover {
+    color: #ff00ff;
+}

@@ -5,21 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vorschau – Digitale Visitenkarte</title>
-    <link rel="stylesheet" href="./themes/darkgreen.css">
+    <link rel="icon" href="./img/favicon.png">
+    <link rel="stylesheet" href="./themes/shared.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body class="linktree-body">
-
-    <div class="preview-banner" id="preview-banner" style="display:none;">
-        Vorschau – ungespeicherte Änderungen
-    </div>
+    <div id="preview-banner" style="display:none; position:fixed; top:0; left:0; right:0; background-color:rgba(42,225,232,0.12); border-bottom:1px solid rgba(42,225,232,0.5); color:#2AE1E8; text-align:center; padding:10px 20px; font-size:0.85rem; font-family:sans-serif; letter-spacing:0.04em; z-index:9999; backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px);"></div>
 
     <main class="linktree-container">
         <div id="profile-container" class="linktree-profile"></div>
         <div id="video-container"></div>
         <div id="links-container" class="linktree-links"></div>
-
         <footer class="legal-footer">
             <a href="#">Impressum</a> <span>|</span> <a href="#">Datenschutz</a>
         </footer>
@@ -30,31 +27,42 @@
         const SUPABASE_URL = 'https://fowpadrwpuuwugskzauj.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_6vNM_zVfFfcCjaI5TQRbWQ_X6swaIFk';
 
+        function loadThemeCSS(theme) {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = './themes/' + (theme || 'darkgreen') + '.css';
+            document.head.appendChild(link);
+        }
+
+        function showBanner() {
+            const banner = document.getElementById('preview-banner');
+            banner.textContent = 'Vorschau – ungespeicherte Änderungen';
+            banner.style.display = 'block';
+            document.querySelector('.linktree-container').style.marginTop = '80px';
+        }
+
         document.addEventListener('DOMContentLoaded', async () => {
             const liveRaw = localStorage.getItem('visitenkarte_preview');
-
             if (liveRaw) {
                 try {
-                    const treeData = JSON.parse(liveRaw);
-                    document.getElementById('preview-banner').style.display = 'block';
-                    if (treeData.profile)     renderProfile(treeData.profile);
-                    if (treeData.socialIcons) renderSocialIcons(treeData.socialIcons);
-                    if (treeData.videoModule) renderVideoModule(treeData.videoModule);
-                    if (treeData.links)       renderLinks(treeData.links);
+                    const td = JSON.parse(liveRaw);
+                    loadThemeCSS(td.theme);
+                    showBanner();
+                    if (td.profile)     renderProfile(td.profile);
+                    if (td.socialIcons) renderSocialIcons(td.socialIcons);
+                    if (td.videoModule) renderVideoModule(td.videoModule);
+                    if (td.links)       renderLinks(td.links);
                     return;
                 } catch (e) {}
             }
 
             const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             try {
-                const { data, error } = await client
-                    .from('profiles')
-                    .select('tree_data')
-                    .limit(1)
-                    .single();
+                const { data, error } = await client.from('profiles').select('tree_data').limit(1).single();
                 if (error) throw error;
                 if (data && data.tree_data) {
                     const td = data.tree_data;
+                    loadThemeCSS(td.theme);
                     if (td.profile)     renderProfile(td.profile);
                     if (td.socialIcons) renderSocialIcons(td.socialIcons);
                     if (td.videoModule) renderVideoModule(td.videoModule);
@@ -62,9 +70,9 @@
                 }
             } catch (err) {
                 console.error('Fehler beim Laden:', err);
+                loadThemeCSS('darkgreen');
             }
         });
     </script>
-
 </body>
 </html>

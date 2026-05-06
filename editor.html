@@ -39,14 +39,35 @@
         <section class="editor-section">
             <h2 class="editor-section-title">Profil</h2>
             <div class="editor-section-body">
-                <div class="editor-profile-image-wrap">
-                    <div class="editor-profile-img-circle" id="profile-img-circle">
-                        <img id="profile-image-preview" src="" alt="">
-                        <div class="editor-profile-img-placeholder" id="profile-img-placeholder">Kein Bild</div>
+
+                <div class="pd-row" id="pd-row">
+
+                    <div class="pd-profile-side" id="pd-profile-side">
+                        <span class="pd-label">Profilbild</span>
+                        <div class="pd-img-circle" id="pd-img-circle">
+                            <img id="profile-image-preview" src="" alt="">
+                            <div class="pd-img-placeholder" id="profile-img-placeholder">Kein Bild</div>
+                        </div>
+                        <button type="button" class="pd-action-btn" id="change-image-btn">Bild ändern</button>
+                        <input type="file" id="profile-image-upload" accept="image/*" style="display:none;">
                     </div>
-                    <button type="button" class="editor-change-image-btn" id="change-image-btn">Bild ändern</button>
-                    <input type="file" id="profile-image-upload" accept="image/*" style="display:none;">
+
+                    <div class="pd-design-side" id="pd-design-side">
+                        <div class="pd-current-wrap" id="pd-current-wrap">
+                            <div class="pd-current-tile" id="pd-current-tile"></div>
+                        </div>
+                        <button type="button" class="pd-name-btn" id="pd-toggle-btn">
+                            <span id="pd-current-name">Dark Green</span>
+                            <span class="pd-arrow-icon" id="pd-arrow"></span>
+                        </button>
+                    </div>
+
                 </div>
+
+                <div class="pd-grid-wrap" id="pd-grid-wrap">
+                    <div class="pd-grid" id="pd-grid"></div>
+                </div>
+
                 <div class="field-group">
                     <label>Name</label>
                     <input type="text" id="profile-name" placeholder="Dein Name oder Kanal-Name">

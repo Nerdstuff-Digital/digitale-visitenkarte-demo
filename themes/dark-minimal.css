@@ -1,0 +1,132 @@
+body.linktree-body {
+    background-color: #000000;
+    color: #f0f0f0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    letter-spacing: 0.3px;
+}
+
+.linktree-container {
+    background-color: #0a0a0a;
+}
+
+@media (min-width: 768px) {
+    .linktree-container {
+        border: 1px solid #333333;
+        border-radius: 8px;
+    }
+}
+
+.linktree-logo {
+    border: 1px solid #333333;
+    filter: grayscale(100%);
+    transition: filter 0.4s ease;
+}
+
+.linktree-logo:hover {
+    filter: grayscale(0%);
+}
+
+.linktree-title {
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 1.3rem;
+    color: #f0f0f0;
+}
+
+.linktree-desc {
+    color: #888888;
+    font-weight: 300;
+}
+
+.action-btn {
+    opacity: 0.6;
+}
+
+.action-btn:hover {
+    opacity: 1;
+}
+
+.action-btn .custom-icon {
+    filter: invert(100%);
+}
+
+.social-icon {
+    background: transparent;
+    border: 1px solid #333333;
+    transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+    border-color: #888888;
+    transform: translateY(-3px);
+}
+
+.social-icon .custom-icon {
+    filter: invert(100%);
+    opacity: 0.85;
+}
+
+.featured-card {
+    background-color: #0a0a0a;
+    border: 1px solid #333333;
+}
+
+.featured-card:hover {
+    border-color: #666666;
+}
+
+.featured-main-icon {
+    filter: invert(100%);
+    opacity: 0.7;
+}
+
+.featured-title {
+    color: #f0f0f0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 1.05rem;
+}
+
+.featured-subtitle {
+    color: #888888;
+}
+
+.featured-action-btn {
+    background: transparent;
+    border: 1px solid #f0f0f0;
+    color: #f0f0f0;
+    border-radius: 4px;
+}
+
+.featured-action-btn:hover {
+    background-color: #f0f0f0;
+    color: #000000;
+}
+
+.linktree-btn {
+    background: transparent;
+    border: 1px solid #333333;
+    color: #f0f0f0;
+    border-radius: 4px;
+}
+
+.linktree-btn:hover {
+    background-color: #1a1a1a;
+    border-color: #666666;
+    transform: translateX(5px);
+}
+
+.button-icon {
+    filter: invert(100%);
+    opacity: 0.8;
+}
+
+.btn-text {
+    text-align: left;
+    letter-spacing: 0.5px;
+}
+
+.legal-footer {
+    color: #888888;
+}

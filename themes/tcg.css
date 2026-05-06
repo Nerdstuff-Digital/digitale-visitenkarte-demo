@@ -1,0 +1,214 @@
+body.linktree-body {
+    background-color: #06090e;
+    background-image: radial-gradient(circle at top, #111a28 0%, #06090e 100%);
+    color: #c9d1d9;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+@media (min-width: 768px) {
+    .linktree-container {
+        background-color: rgba(22,27,34,0.6);
+        border: 1px solid #30363d;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    }
+}
+
+.linktree-logo {
+    border: 3px solid #a8b2bd;
+    border-radius: 8px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.5);
+    padding: 4px;
+    background-color: #161b22;
+}
+
+.linktree-title {
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    font-size: 1.6rem;
+}
+
+.linktree-desc {
+    color: #c9d1d9;
+}
+
+.action-btn {
+    background-color: #161b22;
+    border: 2px solid #a8b2bd;
+    border-radius: 6px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    overflow: hidden;
+    position: absolute;
+}
+
+.action-btn:hover {
+    border-color: #ffffff;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.5);
+    transform: translateY(-2px);
+}
+
+.action-btn .custom-icon {
+    filter: invert(100%);
+}
+
+.social-icon {
+    background-color: #161b22;
+    border: 2px solid #a8b2bd;
+    border-radius: 6px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.social-icon::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 150%;
+    height: 100%;
+    background: linear-gradient(115deg, transparent 20%, rgba(255,0,0,0.3) 30%, rgba(255,255,0,0.3) 45%, rgba(0,255,255,0.3) 60%, rgba(255,0,255,0.3) 75%, transparent 85%);
+    transition: left 0.5s ease;
+    transform: skewX(-20deg);
+}
+
+.social-icon:hover::before {
+    left: 100%;
+}
+
+.social-icon:hover {
+    transform: translateY(-3px);
+    border-color: #ffffff;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.5);
+}
+
+.social-icon .custom-icon {
+    filter: invert(100%);
+    position: relative;
+    z-index: 1;
+}
+
+.featured-card {
+    background-color: #161b22;
+    border: 2px solid #a8b2bd;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    color: #ffffff;
+    position: relative;
+    overflow: hidden;
+}
+
+.featured-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 150%;
+    height: 100%;
+    background: linear-gradient(115deg, transparent 20%, rgba(255,0,0,0.25) 30%, rgba(255,255,0,0.25) 45%, rgba(0,255,255,0.25) 60%, rgba(255,0,255,0.25) 75%, transparent 85%);
+    transition: left 0.6s ease;
+    transform: skewX(-20deg);
+    pointer-events: none;
+}
+
+.featured-card:hover::before {
+    left: 100%;
+}
+
+.featured-card:hover {
+    border-color: #ffffff;
+    transform: translateY(-3px);
+}
+
+.featured-card > * {
+    position: relative;
+    z-index: 1;
+}
+
+.featured-main-icon {
+    filter: invert(100%);
+}
+
+.featured-title {
+    color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+}
+
+.featured-subtitle {
+    color: #c9d1d9;
+}
+
+.featured-action-btn {
+    background-color: #06090e;
+    border: 2px solid #a8b2bd;
+    color: #ffffff;
+    border-radius: 6px;
+    font-weight: 700;
+}
+
+.featured-action-btn:hover {
+    border-color: #ffffff;
+}
+
+.linktree-btn {
+    background-color: #161b22;
+    color: #ffffff;
+    border: 2px solid #a8b2bd;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    font-weight: 700;
+    position: relative;
+    overflow: hidden;
+}
+
+.linktree-btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 150%;
+    height: 100%;
+    background: linear-gradient(115deg, transparent 20%, rgba(255,0,0,0.3) 30%, rgba(255,255,0,0.3) 45%, rgba(0,255,255,0.3) 60%, rgba(255,0,255,0.3) 75%, transparent 85%);
+    transition: left 0.6s ease;
+    transform: skewX(-20deg);
+}
+
+.linktree-btn:hover::before {
+    left: 100%;
+}
+
+.linktree-btn:hover {
+    transform: translateY(-3px);
+    border-color: #ffffff;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+}
+
+.link-icon {
+    background-color: rgba(255,255,255,0.1);
+    border-radius: 4px;
+    width: 36px;
+    height: 36px;
+    position: relative;
+    z-index: 1;
+}
+
+.button-icon {
+    filter: invert(100%);
+}
+
+.btn-text {
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+    position: relative;
+    z-index: 1;
+}
+
+.legal-footer {
+    color: #c9d1d9;
+    opacity: 0.6;
+}
+
+.legal-footer a:hover {
+    opacity: 1;
+}

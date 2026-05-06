@@ -5,6 +5,7 @@ function renderProfile(profile) {
     if (profile.image) {
         const img = document.createElement('img');
         img.src = profile.image;
+        img.alt = profile.name || '';
         img.classList.add('linktree-logo');
         container.appendChild(img);
     }
@@ -28,20 +29,24 @@ function renderSocialIcons(icons) {
     const container = document.getElementById('profile-container');
     if (!container || !Array.isArray(icons) || icons.length === 0) return;
 
+    const validIcons = icons.filter(i => i.url || i.icon);
+    if (validIcons.length === 0) return;
+
     const row = document.createElement('div');
     row.classList.add('social-icons-row');
 
-    icons.forEach(iconData => {
-        if (!iconData.url && !iconData.icon) return;
+    validIcons.forEach(iconData => {
         const a = document.createElement('a');
         a.href = iconData.url || '#';
         a.classList.add('social-icon');
-        a.target = '_blank';
-        a.rel = 'noopener noreferrer';
-
+        if (iconData.url) {
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+        }
         if (iconData.icon) {
             const img = document.createElement('img');
             img.src = iconData.icon;
+            img.alt = '';
             img.classList.add('custom-icon');
             a.appendChild(img);
         }
@@ -58,33 +63,42 @@ function renderVideoModule(videoModule) {
     const card = document.createElement('a');
     card.href = videoModule.url || '#';
     card.classList.add('featured-card');
-    card.target = '_blank';
-    card.rel = 'noopener noreferrer';
+    if (videoModule.url) {
+        card.target = '_blank';
+        card.rel = 'noopener noreferrer';
+    }
 
     if (videoModule.thumbnail) {
         const wrapper = document.createElement('div');
         wrapper.classList.add('featured-icon-wrapper');
         const icon = document.createElement('img');
         icon.src = videoModule.thumbnail;
+        icon.alt = '';
         icon.classList.add('featured-main-icon');
         wrapper.appendChild(icon);
         card.appendChild(wrapper);
     }
 
-    const title = document.createElement('div');
-    title.classList.add('featured-title');
-    title.textContent = videoModule.title || '';
-    card.appendChild(title);
+    if (videoModule.title) {
+        const title = document.createElement('div');
+        title.classList.add('featured-title');
+        title.textContent = videoModule.title;
+        card.appendChild(title);
+    }
 
-    const subtitle = document.createElement('div');
-    subtitle.classList.add('featured-subtitle');
-    subtitle.textContent = videoModule.subtitle || '';
-    card.appendChild(subtitle);
+    if (videoModule.subtitle) {
+        const subtitle = document.createElement('div');
+        subtitle.classList.add('featured-subtitle');
+        subtitle.textContent = videoModule.subtitle;
+        card.appendChild(subtitle);
+    }
 
-    const actionBtn = document.createElement('div');
-    actionBtn.classList.add('featured-action-btn');
-    actionBtn.textContent = videoModule.buttonText || '';
-    card.appendChild(actionBtn);
+    if (videoModule.buttonText) {
+        const btn = document.createElement('div');
+        btn.classList.add('featured-action-btn');
+        btn.textContent = videoModule.buttonText;
+        card.appendChild(btn);
+    }
 
     container.appendChild(card);
 }
@@ -99,8 +113,10 @@ function renderLinks(links) {
         const a = document.createElement('a');
         a.href = link.url || '#';
         a.classList.add('linktree-btn');
-        a.target = '_blank';
-        a.rel = 'noopener noreferrer';
+        if (link.url) {
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+        }
 
         const iconWrapper = document.createElement('div');
         iconWrapper.classList.add('link-icon');
@@ -108,6 +124,7 @@ function renderLinks(links) {
         if (link.icon) {
             const icon = document.createElement('img');
             icon.src = link.icon;
+            icon.alt = '';
             icon.classList.add('custom-icon', 'button-icon');
             iconWrapper.appendChild(icon);
         }

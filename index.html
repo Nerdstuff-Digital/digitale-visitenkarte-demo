@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digitale Visitenkarte</title>
-    <link rel="stylesheet" href="./themes/darkgreen.css">
     <link rel="icon" href="./img/favicon.png">
+    <link rel="stylesheet" href="./themes/shared.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
@@ -15,11 +15,9 @@
         <button id="share-btn" class="action-btn top-right" aria-label="Teilen">
             <img src="./icons/share.png" alt="" class="custom-icon share-icon" onerror="this.style.display='none'">
         </button>
-
         <div id="profile-container" class="linktree-profile"></div>
         <div id="video-container"></div>
         <div id="links-container" class="linktree-links"></div>
-
         <footer class="legal-footer">
             <a href="#">Impressum</a> <span>|</span> <a href="#">Datenschutz</a>
         </footer>
@@ -30,17 +28,21 @@
         const SUPABASE_URL = 'https://fowpadrwpuuwugskzauj.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_6vNM_zVfFfcCjaI5TQRbWQ_X6swaIFk';
 
+        function loadThemeCSS(theme) {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = './themes/' + (theme || 'darkgreen') + '.css';
+            document.head.appendChild(link);
+        }
+
         document.addEventListener('DOMContentLoaded', async () => {
             const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             try {
-                const { data, error } = await client
-                    .from('profiles')
-                    .select('tree_data')
-                    .limit(1)
-                    .single();
+                const { data, error } = await client.from('profiles').select('tree_data').limit(1).single();
                 if (error) throw error;
                 if (data && data.tree_data) {
                     const td = data.tree_data;
+                    loadThemeCSS(td.theme);
                     if (td.profile)     renderProfile(td.profile);
                     if (td.socialIcons) renderSocialIcons(td.socialIcons);
                     if (td.videoModule) renderVideoModule(td.videoModule);
@@ -48,21 +50,17 @@
                 }
             } catch (err) {
                 console.error('Fehler beim Laden:', err);
+                loadThemeCSS('darkgreen');
             }
         });
 
-        const shareBtn = document.getElementById('share-btn');
-        if (shareBtn) {
-            shareBtn.addEventListener('click', () => {
-                if (navigator.share) {
-                    navigator.share({ title: document.title, url: window.location.href }).catch(e => console.error(e));
-                } else {
-                    navigator.clipboard.writeText(window.location.href);
-                    alert('Link kopiert');
-                }
-            });
-        }
+        document.getElementById('share-btn').addEventListener('click', () => {
+            if (navigator.share) {
+                navigator.share({ title: document.title, url: window.location.href }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(window.location.href).then(() => alert('Link kopiert'));
+            }
+        });
     </script>
 </body>
-
 </html>

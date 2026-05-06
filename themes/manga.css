@@ -1,0 +1,203 @@
+body.linktree-body {
+    background-color: #ffffff;
+    background-image:
+        radial-gradient(#cccccc 15%, transparent 16%),
+        radial-gradient(#cccccc 15%, transparent 16%);
+    background-size: 14px 14px;
+    background-position: 0 0, 7px 7px;
+    color: #000000;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.linktree-container {
+    background-color: #ffffff;
+}
+
+@media (min-width: 768px) {
+    .linktree-container {
+        border: 4px solid #000000;
+        box-shadow: 12px 12px 0 #000000;
+        border-radius: 0;
+    }
+}
+
+.linktree-logo {
+    border: 4px solid #000000;
+    border-radius: 0;
+    box-shadow: 6px 6px 0 #000000;
+    width: 110px;
+    height: 110px;
+    transition: all 0.3s ease;
+}
+
+.linktree-logo:hover {
+    box-shadow: 8px 8px 0 #e60000;
+    transform: translate(-2px,-2px);
+}
+
+.linktree-title {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: #000000;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+}
+
+.linktree-desc {
+    color: #000000;
+    font-weight: 700;
+}
+
+.action-btn {
+    background-color: #ffffff;
+    border: 4px solid #000000;
+    border-radius: 0;
+    box-shadow: 4px 4px 0 #000000;
+}
+
+.action-btn:hover {
+    transform: translate(-2px,-2px);
+    box-shadow: 6px 6px 0 #e60000;
+    border-color: #e60000;
+}
+
+.action-btn .custom-icon {
+    filter: brightness(0%);
+}
+
+.action-btn:hover .custom-icon {
+    filter: invert(15%) sepia(85%) saturate(7000%) hue-rotate(355deg) brightness(95%) contrast(115%);
+}
+
+.social-icon {
+    background-color: #ffffff;
+    border: 4px solid #000000;
+    border-radius: 0;
+    box-shadow: 4px 4px 0 #000000;
+    transition: all 0.2s ease;
+}
+
+.social-icon:hover {
+    transform: translate(-2px,-2px);
+    box-shadow: 6px 6px 0 #e60000;
+    border-color: #e60000;
+}
+
+.social-icon .custom-icon {
+    filter: brightness(0%);
+    transition: filter 0.2s;
+}
+
+.social-icon:hover .custom-icon {
+    filter: invert(15%) sepia(85%) saturate(7000%) hue-rotate(355deg) brightness(95%) contrast(115%);
+}
+
+.featured-card {
+    background-color: #000000;
+    border: 4px solid #000000;
+    border-radius: 0;
+    color: #ffffff;
+    box-shadow: 6px 6px 0 #000000;
+}
+
+.featured-card:hover {
+    background-color: #e60000;
+    transform: translate(-2px,-2px);
+    box-shadow: 8px 8px 0 #000000;
+}
+
+.featured-main-icon {
+    filter: invert(100%);
+}
+
+.featured-title {
+    color: #ffffff;
+    text-transform: uppercase;
+    font-weight: 900;
+    font-family: 'Comic Sans MS', sans-serif;
+}
+
+.featured-subtitle {
+    color: #ffffff;
+    font-weight: 700;
+    opacity: 0.9;
+}
+
+.featured-action-btn {
+    background-color: #ffffff;
+    color: #000000;
+    border: 3px solid #ffffff;
+    border-radius: 0;
+    text-transform: uppercase;
+    font-weight: 900;
+}
+
+.featured-action-btn:hover {
+    background-color: #ffffff;
+    color: #e60000;
+}
+
+.linktree-btn {
+    background-color: #ffffff;
+    color: #000000;
+    border: 4px solid #000000;
+    border-radius: 0;
+    font-weight: 800;
+    text-transform: uppercase;
+    box-shadow: 6px 6px 0 #000000;
+}
+
+.linktree-btn:hover {
+    transform: translate(-2px,-2px);
+    box-shadow: 8px 8px 0 #e60000;
+    border-color: #e60000;
+}
+
+.linktree-btn:active {
+    transform: translate(6px,6px);
+    box-shadow: none;
+}
+
+.link-icon {
+    border: 2px solid #000000;
+    background-color: #ffffff;
+    width: 40px;
+    height: 40px;
+}
+
+.linktree-btn:hover .link-icon {
+    border-color: #e60000;
+}
+
+.button-icon {
+    filter: brightness(0%);
+}
+
+.linktree-btn:hover .button-icon {
+    filter: invert(15%) sepia(85%) saturate(7000%) hue-rotate(355deg) brightness(95%) contrast(115%);
+}
+
+.btn-text {
+    text-align: center;
+    letter-spacing: 0.5px;
+}
+
+.legal-footer {
+    color: #000000;
+    font-weight: 800;
+    background-color: #ffffff;
+    padding: 5px 10px;
+    border: 2px solid #000000;
+    box-shadow: 3px 3px 0 #000000;
+    opacity: 1;
+    align-self: center;
+    width: auto;
+    display: inline-flex;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.legal-footer a:hover {
+    color: #e60000;
+}
