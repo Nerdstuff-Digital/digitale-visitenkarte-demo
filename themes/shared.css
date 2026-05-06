@@ -52,6 +52,12 @@ body.linktree-body {
 }
 
 .top-right { right: 20px; }
+
+.share-svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
 .top-left  { left: 20px; }
 
 .action-btn .custom-icon {
@@ -79,11 +85,6 @@ body.linktree-body {
     width: 100%;
 }
 
-.linktree-title {
-    padding-right: 44px;
-    padding-left: 44px;
-}
-
 .linktree-logo {
     width: 100px;
     height: 100px;
@@ -102,6 +103,8 @@ body.linktree-body {
     line-height: 1.2;
     word-wrap: break-word;
     max-width: 100%;
+    padding-right: 44px;
+    padding-left: 44px;
 }
 
 .linktree-desc {
