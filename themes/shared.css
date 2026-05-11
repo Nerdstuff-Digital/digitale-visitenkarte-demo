@@ -86,11 +86,11 @@ body.linktree-body {
 }
 
 .linktree-logo {
-    width: 100px;
-    height: 100px;
+    width: 150px;
+    height: 150px;
     border-radius: 50%;
     object-fit: cover;
-    object-position: center;
+    object-position: top center;
     margin-bottom: 16px;
     display: block;
     flex-shrink: 0;
@@ -113,6 +113,7 @@ body.linktree-body {
     margin: 0 0 20px 0;
     max-width: 90%;
     word-wrap: break-word;
+    white-space: pre-wrap;
 }
 
 .social-icons-row {

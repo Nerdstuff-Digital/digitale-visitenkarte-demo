@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digitale Visitenkarte</title>
+    
+    <base href="/">
+    
     <link rel="icon" href="./img/favicon.png">
     <link rel="stylesheet" href="./themes/shared.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -36,9 +39,21 @@
         }
 
         document.addEventListener('DOMContentLoaded', async () => {
+            const pathMatch = window.location.pathname.match(/^\/u\/([a-z0-9-]+)$/i);
+            const username = pathMatch ? pathMatch[1] : null;
+
+            if (!username) {
+                loadThemeCSS('darkgreen');
+                return;
+            }
+
             const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             try {
-                const { data, error } = await client.from('profiles').select('tree_data').limit(1).single();
+                const { data, error } = await client
+                    .from('profiles')
+                    .select('tree_data')
+                    .eq('username', username)
+                    .single();
                 if (error) throw error;
                 if (data && data.tree_data) {
                     const td = data.tree_data;

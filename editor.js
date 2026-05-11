@@ -66,6 +66,36 @@ let currentTheme = 'darkgreen';
 let designGridOpen = false;
 let isDirty = false;
 
+// --- NEUE FUNKTIONEN VON CLAUDE ---
+function getPublicUrl() {
+    const username = document.getElementById('profile-username')?.value?.trim();
+    if (!username) return null;
+    return window.location.origin + '/u/' + username;
+}
+
+function updatePublicLinkDisplay() {
+    const url = getPublicUrl();
+    document.getElementById('public-link-url').textContent = url || 'Erst Link-Namen setzen und speichern';
+}
+
+function validateUsername(username) {
+    if (!username) return 'Link-Name darf nicht leer sein.';
+    if (username.length < 3) return 'Mindestens 3 Zeichen.';
+    if (username.length > 30) return 'Maximal 30 Zeichen.';
+    if (!/^[a-z0-9][a-z0-9-]*[a-z0-9]$/.test(username)) return 'Nur Kleinbuchstaben, Zahlen und Bindestriche (nicht am Anfang/Ende).';
+    return null;
+}
+
+function autoGenerateUsername(email) {
+    return email.split('@')[0]
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '')
+        .substring(0, 30);
+}
+// ----------------------------------
+
 document.addEventListener('DOMContentLoaded', async () => {
     const session = await requireAuth();
     if (!session) return;
@@ -78,9 +108,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 function setupPublicLink() {
-    const url = window.location.origin + '/index.html';
-    document.getElementById('public-link-url').textContent = url;
+    updatePublicLinkDisplay();
     document.getElementById('copy-link-btn').addEventListener('click', () => {
+        const url = getPublicUrl();
+        if (!url) { showToast('Erst Link-Namen setzen.', 'error'); return; }
         navigator.clipboard.writeText(url).then(() => showToast('Link kopiert!', 'success'));
     });
 }
@@ -179,7 +210,7 @@ async function loadEditorData() {
 
     let { data, error } = await client
         .from('profiles')
-        .select('id, tree_data')
+        .select('id, tree_data, username')
         .eq('user_id', user.id)
         .limit(1)
         .single();
@@ -195,7 +226,7 @@ async function loadEditorData() {
         const { data: inserted, error: insertError } = await client
             .from('profiles')
             .insert({ user_id: user.id, tree_data: empty })
-            .select('id, tree_data')
+            .select('id, tree_data, username')
             .single();
         if (insertError) { showToast('Profil konnte nicht erstellt werden: ' + insertError.message, 'error'); return; }
         data = inserted;
@@ -206,6 +237,9 @@ async function loadEditorData() {
 
     currentProfileId = data.id;
     const td = data.tree_data || {};
+
+    document.getElementById('profile-username').value = data.username || autoGenerateUsername(user.email || '');
+    updatePublicLinkDisplay();
 
     currentTheme = td.theme || 'darkgreen';
     updateCurrentTile();
@@ -220,7 +254,11 @@ async function loadEditorData() {
 
 function populateProfile(profile) {
     document.getElementById('profile-name').value        = profile.name        || '';
-    document.getElementById('profile-description').value = profile.description || '';
+    
+    // Check hinzugefügt, damit es nicht crasht, falls das Feld fehlt (siehe Bericht)
+    const descField = document.getElementById('profile-description');
+    if(descField) descField.value = profile.description || '';
+
     currentImageUrl = profile.image || '';
     updateImagePreview(currentImageUrl);
 }
@@ -363,11 +401,15 @@ function collectFormData() {
             isVisible: row.querySelector('.link-visible').checked,
         });
     });
+    
+    // Check für description hinzugefügt, siehe Bericht
+    const descField = document.getElementById('profile-description');
+
     return {
         theme: currentTheme,
         profile: {
             name:        document.getElementById('profile-name').value.trim(),
-            description: document.getElementById('profile-description').value.trim(),
+            description: descField ? descField.value.trim() : '',
             image:       currentImageUrl,
         },
         socialIcons,
@@ -384,16 +426,34 @@ function collectFormData() {
 }
 
 async function saveData() {
-    if (!currentProfileId) { showToast('Kein Profil geladen. Bitte mit echtem Login anmelden.', 'error'); return false; }
+    if (!currentProfileId) { showToast('Kein Profil geladen.', 'error'); return false; }
+    const username = document.getElementById('profile-username').value.trim().toLowerCase();
+    const usernameError = validateUsername(username);
+    if (usernameError) { showToast(usernameError, 'error'); return false; }
+    
     const saveBtn = document.getElementById('save-btn');
     saveBtn.disabled = true;
     saveBtn.textContent = 'Speichert…';
     const treeData = collectFormData();
     const client = await getAuthenticatedClient();
-    const { error } = await client.from('profiles').update({ tree_data: treeData }).eq('id', currentProfileId);
+    
+    const { error } = await client.from('profiles')
+        .update({ tree_data: treeData, username: username })
+        .eq('id', currentProfileId);
+        
     saveBtn.disabled = false;
     saveBtn.textContent = 'Speichern';
-    if (error) { showToast('Fehler: ' + error.message, 'error'); return false; }
+    
+    if (error) {
+        if (error.code === '23505') {
+            showToast('Dieser Link-Name ist bereits vergeben.', 'error');
+        } else {
+            showToast('Fehler: ' + error.message, 'error');
+        }
+        return false;
+    }
+    
+    updatePublicLinkDisplay();
     isDirty = false;
     showToast('Erfolgreich gespeichert!', 'success');
     return true;
@@ -401,9 +461,14 @@ async function saveData() {
 
 async function handleImageUpload(file) {
     if (!file) return;
+    const allowed = ['jpg', 'jpeg', 'png', 'gif'];
+    const ext = file.name.split('.').pop().toLowerCase();
+    if (!allowed.includes(ext)) {
+        showToast('Nur JPG, PNG und GIF erlaubt.', 'error');
+        return;
+    }
     showToast('Bild wird hochgeladen…', 'loading');
     const client = await getAuthenticatedClient();
-    const ext = file.name.split('.').pop();
     const { data, error } = await client.storage.from('visitenkarte').upload('profile-' + Date.now() + '.' + ext, file, { upsert: true });
     if (error) { showToast('Upload fehlgeschlagen: ' + error.message, 'error'); return; }
     const { data: urlData } = client.storage.from('visitenkarte').getPublicUrl(data.path);
@@ -450,6 +515,13 @@ function setupStaticListeners() {
             document.querySelector('[data-target="links-body"]').classList.add('is-open');
         }
         appendLinkRow(c, { icon: '', title: '', url: '', isVisible: true }, c.children.length);
+        isDirty = true;
+    });
+
+    // NEUER EVENTLISTENER FÜR DEN USERNAME:
+    document.getElementById('profile-username').addEventListener('input', e => {
+        e.target.value = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '');
+        updatePublicLinkDisplay();
         isDirty = true;
     });
 }
