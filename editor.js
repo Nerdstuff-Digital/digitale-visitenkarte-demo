@@ -66,7 +66,6 @@ let currentTheme = 'darkgreen';
 let designGridOpen = false;
 let isDirty = false;
 
-// --- NEUE FUNKTIONEN VON CLAUDE ---
 function getPublicUrl() {
     const username = document.getElementById('profile-username')?.value?.trim();
     if (!username) return null;
@@ -94,7 +93,6 @@ function autoGenerateUsername(email) {
         .replace(/^-|-$/g, '')
         .substring(0, 30);
 }
-// ----------------------------------
 
 document.addEventListener('DOMContentLoaded', async () => {
     const session = await requireAuth();
@@ -194,12 +192,16 @@ function toggleDesignGrid() {
     const gridWrap = document.getElementById('pd-grid-wrap');
     const row = document.getElementById('pd-row');
     const toggleBtn = document.getElementById('pd-toggle-btn');
-    const changeBtn = document.getElementById('change-image-btn');
+    
+    const imageActions = document.querySelector('.pd-profile-actions');
+    const imagePosWrapper = document.getElementById('profile-image-pos-wrapper');
 
     gridWrap.classList.toggle('is-open', designGridOpen);
     row.classList.toggle('design-open', designGridOpen);
     toggleBtn.classList.toggle('is-open', designGridOpen);
-    changeBtn.style.display = designGridOpen ? 'none' : '';
+    
+    imageActions.style.display = designGridOpen ? 'none' : 'flex';
+    imagePosWrapper.classList.add('is-collapsed');
 }
 
 async function loadEditorData() {
@@ -218,7 +220,7 @@ async function loadEditorData() {
     if (error && error.code === 'PGRST116') {
         const empty = {
             theme: 'darkgreen',
-            profile: { name: '', description: '', image: '' },
+            profile: { name: '', description: '', image: '', imagePos: 50 },
             socialIcons: [],
             videoModule: { isVisible: false, url: '', thumbnail: './icons/youtube.png', title: '', subtitle: '', buttonText: 'Jetzt ansehen' },
             links: [],
@@ -253,14 +255,19 @@ async function loadEditorData() {
 }
 
 function populateProfile(profile) {
-    document.getElementById('profile-name').value        = profile.name        || '';
+    document.getElementById('profile-name').value = profile.name || '';
     
-    // Check hinzugefügt, damit es nicht crasht, falls das Feld fehlt (siehe Bericht)
     const descField = document.getElementById('profile-description');
-    if(descField) descField.value = profile.description || '';
+    if (descField) descField.value = profile.description || '';
 
     currentImageUrl = profile.image || '';
     updateImagePreview(currentImageUrl);
+
+    const posField = document.getElementById('profile-image-pos');
+    if (posField) {
+        posField.value = profile.imagePos !== undefined ? profile.imagePos : 50;
+        document.getElementById('profile-image-preview').style.objectPosition = `center ${posField.value}%`;
+    }
 }
 
 function populateSocialIcons(icons) {
@@ -402,8 +409,8 @@ function collectFormData() {
         });
     });
     
-    // Check für description hinzugefügt, siehe Bericht
     const descField = document.getElementById('profile-description');
+    const posField = document.getElementById('profile-image-pos');
 
     return {
         theme: currentTheme,
@@ -411,6 +418,7 @@ function collectFormData() {
             name:        document.getElementById('profile-name').value.trim(),
             description: descField ? descField.value.trim() : '',
             image:       currentImageUrl,
+            imagePos:    posField ? parseInt(posField.value) : 50,
         },
         socialIcons,
         videoModule: {
@@ -501,9 +509,17 @@ function setupStaticListeners() {
     document.getElementById('dialog-save-logout-btn').addEventListener('click', async () => { if (await saveData() !== false) logoutUser(); });
     document.getElementById('pd-toggle-btn').addEventListener('click', toggleDesignGrid);
     document.getElementById('change-image-btn').addEventListener('click', () => { document.getElementById('profile-image-upload').click(); });
+    document.getElementById('toggle-image-settings-btn').addEventListener('click', () => {
+        document.getElementById('profile-image-pos-wrapper').classList.toggle('is-collapsed');
+    });
     document.getElementById('profile-image-upload').addEventListener('change', e => { if (e.target.files[0]) handleImageUpload(e.target.files[0]); });
     document.getElementById('add-social-btn').addEventListener('click', () => {
         const c = document.getElementById('social-icons-list');
+        const body = document.getElementById('social-icons-list');
+        if (body.classList.contains('is-collapsed')) {
+            body.classList.remove('is-collapsed');
+            document.querySelector('[data-target="social-icons-list"]').classList.add('is-open');
+        }
         appendSocialIconRow(c, { icon: '', url: '' }, c.children.length);
         isDirty = true;
     });
@@ -518,12 +534,19 @@ function setupStaticListeners() {
         isDirty = true;
     });
 
-    // NEUER EVENTLISTENER FÜR DEN USERNAME:
     document.getElementById('profile-username').addEventListener('input', e => {
         e.target.value = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '');
         updatePublicLinkDisplay();
         isDirty = true;
     });
+    
+    const posField = document.getElementById('profile-image-pos');
+    if (posField) {
+        posField.addEventListener('input', (e) => {
+            document.getElementById('profile-image-preview').style.objectPosition = `center ${e.target.value}%`;
+            isDirty = true;
+        });
+    }
 }
 
 function escHtml(str) {

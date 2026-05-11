@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="de">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +8,6 @@
     <link rel="stylesheet" href="./style-admin.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-
 <body class="editor-page">
 
     <header class="editor-header">
@@ -24,7 +22,6 @@
     </header>
 
     <main class="editor-main">
-
         <div class="editor-link-display">
             <span class="editor-link-label">Dein Link</span>
             <span class="editor-link-url" id="public-link-url"></span>
@@ -39,17 +36,26 @@
         <section class="editor-section">
             <h2 class="editor-section-title">Profil</h2>
             <div class="editor-section-body">
-
                 <div class="pd-row" id="pd-row">
-
                     <div class="pd-profile-side" id="pd-profile-side">
                         <span class="pd-label">Profilbild</span>
                         <div class="pd-img-circle" id="pd-img-circle">
                             <img id="profile-image-preview" src="" alt="">
                             <div class="pd-img-placeholder" id="profile-img-placeholder">Kein Bild</div>
                         </div>
-                        <button type="button" class="editor-change-image-btn" id="change-image-btn">Bild ändern</button>
-                        <input type="file" id="profile-image-upload" accept=".jpg,.jpeg,.png,.gif" style="display:none;">
+                        
+                        <div class="pd-profile-actions">
+                            <button type="button" class="editor-change-image-btn" id="change-image-btn">Bild ändern</button>
+                            <button type="button" class="pd-settings-btn" id="toggle-image-settings-btn" title="Fokus-Einstellungen">
+                                <img src="./icons/settings.svg" alt="SETTING">
+                            </button>
+                            <input type="file" id="profile-image-upload" accept=".jpg,.jpeg,.png,.gif" style="display:none;">
+                        </div>
+                        
+                        <div class="field-group is-collapsed pd-fokus-wrapper" id="profile-image-pos-wrapper">
+                            <label for="profile-image-pos">Bild-Fokus (Hoch/Runter)</label>
+                            <input type="range" id="profile-image-pos" min="0" max="100" value="50">
+                        </div>
                     </div>
 
                     <div class="pd-design-side" id="pd-design-side">
@@ -61,7 +67,6 @@
                             <span class="pd-arrow-icon" id="pd-arrow"></span>
                         </button>
                     </div>
-
                 </div>
 
                 <div class="pd-grid-wrap" id="pd-grid-wrap">
@@ -74,6 +79,11 @@
                 </div>
 
                 <div class="field-group">
+                    <label>Beschreibung</label>
+                    <textarea id="profile-description" placeholder="Beschreibe dich kurz..."></textarea>
+                </div>
+
+                <div class="field-group">
                     <label>Dein Link-Name</label>
                     <div class="username-input-wrap">
                         <span class="username-prefix">/u/</span>
@@ -81,17 +91,21 @@
                     </div>
                     <p class="editor-section-hint" style="margin:4px 0 0 0;">Nur Kleinbuchstaben, Zahlen und Bindestriche.</p>
                 </div> 
-                           
             </div>
         </section>
 
         <section class="editor-section">
-            <div class="editor-section-header">
-                <h2 class="editor-section-title">Social Icons</h2>
-                <button type="button" id="add-social-btn" class="editor-add-btn">+ Hinzufügen</button>
+            <div class="editor-section-header collapsible-trigger" data-target="social-icons-list">
+                <div class="collapsible-header-left">
+                    <h2 class="editor-section-title">Social Icons</h2>
+                    <p class="editor-section-hint">Die kleinen Icon-Buttons unter deinem Profilbild.</p>
+                </div>
+                <div class="collapsible-header-right">
+                    <button type="button" id="add-social-btn" class="editor-add-btn" onclick="event.stopPropagation()">+ Hinzufügen</button>
+                    <span class="collapse-arrow"></span>
+                </div>
             </div>
-            <p class="editor-section-hint">Die kleinen Icon-Buttons unter deinem Profilbild.</p>
-            <div id="social-icons-list" class="editor-list"></div>
+            <div id="social-icons-list" class="editor-list editor-section-body is-collapsed"></div>
         </section>
 
         <section class="editor-section">
@@ -155,7 +169,6 @@
                 <div id="links-list" class="editor-list"></div>
             </div>
         </section>
-
     </main>
 
     <div class="save-toast" id="save-toast"></div>
@@ -172,6 +185,5 @@
 
     <script src="./auth.js"></script>
     <script src="./editor.js"></script>
-
 </body>
 </html>

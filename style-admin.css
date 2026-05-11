@@ -551,7 +551,19 @@ body.editor-page {
 textarea {
     resize: vertical;
     min-height: 80px;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    padding: 12px;
+    color: white;
+    font-family: "TextSchrift", sans-serif;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s;
 }
+
+textarea:focus { border-color: #2AE1E8; }
 
 select {
     width: 100%;
@@ -1189,9 +1201,13 @@ body:has(.preview-banner[style*="block"]) .linktree-container {
     z-index: 9999;
 }
 
+body:has(.preview-banner[style*="block"]) .linktree-container {
+    margin-top: 75px;
+}
+
 .pd-row {
     display: flex;
-    align-items: stretch;
+    align-items: flex-start;
     justify-content: center;
     gap: 32px;
 }
@@ -1239,12 +1255,75 @@ body:has(.preview-banner[style*="block"]) .linktree-container {
     text-align: center;
 }
 
+.pd-profile-actions {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+}
+
+.pd-settings-btn {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.6);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s, background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.pd-settings-btn img {
+    width: 20px;
+    height: 20px;
+    filter: invert(100%) brightness(80%);
+    transition: filter 0.2s;
+}
+
+.pd-settings-btn:hover {
+    border-color: #2AE1E8;
+    background-color: rgba(42, 225, 232, 0.1);
+}
+
+.pd-settings-btn:hover img {
+    filter: invert(100%) brightness(100%);
+}
+
+.editor-change-image-btn {
+    flex: 1;
+}
+
+.pd-fokus-wrapper.is-collapsed {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    margin-top: 0;
+    transition: max-height 0.3s ease, opacity 0.25s ease, margin-top 0.3s ease;
+}
+
+.pd-fokus-wrapper:not(.is-collapsed) {
+    max-height: 100px;
+    opacity: 1;
+    margin-top: 15px;
+    transition: max-height 0.3s ease, opacity 0.25s ease, margin-top 0.3s ease;
+}
+
+.pd-fokus-wrapper label {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 5px;
+}
+
 .pd-row.design-open .pd-img-circle {
     width: 64px;
     height: 64px;
 }
 
-.pd-row.design-open .editor-change-image-btn {
+.pd-row.design-open .pd-profile-actions {
     display: none;
 }
 
@@ -1398,6 +1477,19 @@ body:has(.preview-banner[style*="block"]) .linktree-container {
         width: 80px;
         height: 80px;
     }
+    .pd-profile-actions {
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+    .pd-settings-btn {
+        width: 100%;
+        height: 32px;
+    }
+    .pd-settings-btn img {
+        width: 18px;
+        height: 18px;
+    }
     .pd-current-tile {
         width: 80px;
         height: 80px;
@@ -1468,4 +1560,52 @@ body:has(.preview-banner[style*="block"]) .linktree-container {
 
 .username-input-wrap input::placeholder {
     color: rgba(255,255,255,0.25);
+}
+
+input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    background: transparent;
+    margin: 5px 0;
+}
+
+input[type="range"]:focus {
+    outline: none;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 4px;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 2px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #2AE1E8;
+    cursor: pointer;
+    -webkit-appearance: none;
+    margin-top: -6px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+}
+
+input[type="range"]::-moz-range-track {
+    width: 100%;
+    height: 4px;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 2px;
+}
+
+input[type="range"]::-moz-range-thumb {
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #2AE1E8;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
 }

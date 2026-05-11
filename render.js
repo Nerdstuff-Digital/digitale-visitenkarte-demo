@@ -7,6 +7,11 @@ function renderProfile(profile) {
         img.src = profile.image;
         img.alt = profile.name || '';
         img.classList.add('linktree-logo');
+        
+        if (profile.imagePos !== undefined) {
+            img.style.objectPosition = `center ${profile.imagePos}%`;
+        }
+        
         container.appendChild(img);
     }
 
