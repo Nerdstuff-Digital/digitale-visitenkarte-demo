@@ -1,32 +1,56 @@
+@keyframes crt-scroll {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 100vh; }
+}
+
+@keyframes terminal-flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+    20%, 24%, 55% { opacity: 0.8; }
+    22% { opacity: 0.9; }
+}
+
+@keyframes cursor-blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+}
+
+@keyframes system-glitch {
+    0%, 96%, 100% { transform: translate(0); filter: none; }
+    97% { transform: translate(-2px, 1px); filter: drop-shadow(2px 0 0 red) drop-shadow(-2px 0 0 blue); }
+    98% { transform: translate(2px, -1px); filter: drop-shadow(-2px 0 0 red) drop-shadow(2px 0 0 blue); }
+    99% { transform: translate(0); filter: none; }
+}
+
 body.linktree-body {
-    background-color: #000000;
+    background-color: #050505;
     color: #00ff41;
     font-family: 'Courier New', Courier, monospace;
     position: relative;
     overflow-x: hidden;
 }
 
-body.linktree-body::before {
+body.linktree-body::after {
     content: '';
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(rgba(0,255,65,0.04) 50%, transparent 50%);
+    background: linear-gradient(rgba(0, 255, 65, 0.08) 50%, rgba(0, 0, 0, 0.2) 50%);
     background-size: 100% 4px;
+    animation: crt-scroll 10s linear infinite;
     pointer-events: none;
-    z-index: 1000;
-    opacity: 0.6;
+    z-index: 9999;
 }
 
 .linktree-container {
-    background-color: #000000;
+    background-color: rgba(0, 0, 0, 0.8);
     border: 1px solid #00ff41;
-    box-shadow: 0 0 20px rgba(0,255,65,0.3), inset 0 0 30px rgba(0,255,65,0.04);
+    box-shadow: 0 0 15px rgba(0, 255, 65, 0.2), inset 0 0 20px rgba(0, 255, 65, 0.1);
     border-radius: 0;
     position: relative;
     z-index: 2;
+    animation: terminal-flicker 6s infinite;
 }
 
 .linktree-logo {
@@ -34,107 +58,106 @@ body.linktree-body::before {
     height: 110px;
     border-radius: 0;
     border: 2px solid #00ff41;
-    box-shadow: 0 0 8px rgba(0,255,65,0.4);
-    filter: grayscale(80%) brightness(0.85);
-    transition: filter 0.4s ease, box-shadow 0.4s ease;
-    object-fit: cover;
-    background-color: #000000;
-}
-
-.linktree-logo:hover {
-    filter: grayscale(0%) brightness(1);
-    box-shadow: 0 0 18px rgba(0,255,65,0.8);
+    box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+    filter: sepia(100%) hue-rotate(80deg) saturate(400%) contrast(150%);
+    animation: system-glitch 4s infinite 1s;
 }
 
 .linktree-title {
-    font-family: 'Courier New', Courier, monospace;
     font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
     color: #00ff41;
-    text-shadow: 0 0 6px rgba(0,255,65,0.6);
-    letter-spacing: 1px;
-    font-size: 1.4rem;
+    text-shadow: 0 0 5px rgba(0, 255, 65, 0.6);
+    position: relative;
+    display: inline-block;
+    padding-right: 12px;
 }
 
-.linktree-title::before { content: '> '; }
+.linktree-title::after {
+    content: "_";
+    position: absolute;
+    right: 0;
+    animation: cursor-blink 1s step-end infinite;
+}
 
 .linktree-desc {
-    color: #00ff41;
-    font-family: 'Courier New', Courier, monospace;
-    opacity: 0.85;
+    color: #00a82b;
     font-size: 0.9rem;
+    line-height: 1.6;
 }
 
 .action-btn {
-    background-color: transparent;
+    background: #000000;
     border: 1px solid #00ff41;
-    border-radius: 2px;
-    box-shadow: 0 0 5px rgba(0,255,65,0.3);
-}
-
-.action-btn:hover {
-    background-color: #00ff41;
-    box-shadow: 0 0 12px #00ff41;
+    border-radius: 0;
+    box-shadow: 0 0 8px rgba(0, 255, 65, 0.3);
 }
 
 .action-btn .custom-icon {
     filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg) brightness(118%) contrast(119%);
 }
 
-.action-btn:hover .custom-icon {
-    filter: invert(0%) brightness(0%);
+@media (hover: hover) and (pointer: fine) {
+    .action-btn:hover {
+        background-color: #00ff41;
+        box-shadow: 0 0 15px #00ff41;
+    }
+    .action-btn:hover .custom-icon {
+        filter: invert(0%) brightness(0%);
+    }
+}
+
+.action-btn:active {
+    background-color: #00ff41 !important;
+    box-shadow: 0 0 20px #00ff41 !important;
+    transition: none;
+}
+
+.action-btn:active .custom-icon {
+    filter: invert(0%) brightness(0%) !important;
 }
 
 .social-icon {
-    background-color: transparent;
+    background-color: #000000;
     border: 1px solid #00ff41;
-    border-radius: 2px;
-    box-shadow: 0 0 5px rgba(0,255,65,0.3);
-    transition: all 0.2s ease;
-}
-
-.social-icon:hover {
-    background-color: #00ff41;
-    box-shadow: 0 0 15px #00ff41;
-    transform: translateY(-3px);
+    border-radius: 0;
+    box-shadow: 0 0 8px rgba(0, 255, 65, 0.3);
+    transition: none;
 }
 
 .social-icon .custom-icon {
     filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg) brightness(118%) contrast(119%);
-    transition: filter 0.2s;
 }
 
-.social-icon:hover .custom-icon {
-    filter: invert(0%) brightness(0%);
+@media (hover: hover) and (pointer: fine) {
+    .social-icon:hover {
+        background-color: #00ff41;
+        box-shadow: 0 0 15px #00ff41;
+        transform: translateY(-2px);
+    }
+    .social-icon:hover .custom-icon {
+        filter: invert(0%) brightness(0%);
+    }
+}
+
+.social-icon:active {
+    background-color: #00ff41 !important;
+    transform: translateY(2px);
+    transition: none;
+}
+
+.social-icon:active .custom-icon {
+    filter: invert(0%) brightness(0%) !important;
 }
 
 .featured-card {
-    background-color: transparent;
-    border: 1px solid #00ff41;
-    border-radius: 2px;
-    color: #00ff41;
-    box-shadow: 0 0 8px rgba(0,255,65,0.3);
-    padding-top: 32px;
-    position: relative;
-}
-
-.featured-card::before {
-    content: '> ./play.sh';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    background-color: rgba(0,255,65,0.15);
-    color: #00ff41;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 0.75rem;
-    padding: 4px 12px;
-    text-align: left;
-    border-bottom: 1px solid #00ff41;
-    letter-spacing: 1px;
-}
-
-.featured-card:hover {
-    box-shadow: 0 0 18px rgba(0,255,65,0.6);
+    background-color: #000000;
+    border: 1px dashed #00ff41;
+    border-radius: 0;
+    box-shadow: inset 0 0 10px rgba(0, 255, 65, 0.1);
+    transition: none;
+    animation: system-glitch 6s infinite 2s;
 }
 
 .featured-main-icon {
@@ -143,92 +166,119 @@ body.linktree-body::before {
 
 .featured-title {
     color: #00ff41;
-    font-family: 'Courier New', Courier, monospace;
-    font-weight: bold;
-    text-shadow: 0 0 6px rgba(0,255,65,0.5);
+    text-transform: uppercase;
     letter-spacing: 1px;
 }
 
 .featured-subtitle {
-    color: #00ff41;
-    opacity: 0.75;
-    font-family: 'Courier New', Courier, monospace;
+    color: #00a82b;
 }
 
 .featured-action-btn {
-    background-color: transparent;
-    color: #00ff41;
+    background: transparent;
     border: 1px solid #00ff41;
-    border-radius: 2px;
-    font-family: 'Courier New', Courier, monospace;
-    font-weight: bold;
+    color: #00ff41;
+    border-radius: 0;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    box-shadow: 0 0 5px rgba(0,255,65,0.3);
+    font-weight: bold;
 }
 
-.featured-action-btn:hover {
-    background-color: #00ff41;
-    color: #000000;
-    box-shadow: 0 0 15px #00ff41;
+@media (hover: hover) and (pointer: fine) {
+    .featured-action-btn:hover {
+        background-color: #00ff41;
+        color: #000000;
+        box-shadow: 0 0 15px #00ff41;
+    }
+}
+
+.featured-action-btn:active {
+    background-color: #00ff41 !important;
+    color: #000000 !important;
+    transition: none;
 }
 
 .linktree-btn {
-    background-color: transparent;
+    background-color: #000000;
     color: #00ff41;
     border: 1px solid #00ff41;
-    border-radius: 2px;
-    font-family: 'Courier New', Courier, monospace;
+    border-radius: 0;
     font-weight: bold;
-    box-shadow: 0 0 5px rgba(0,255,65,0.3);
+    text-transform: uppercase;
     letter-spacing: 1px;
+    box-shadow: 0 0 5px rgba(0, 255, 65, 0.3);
+    position: relative;
+    transition: none;
 }
 
-.linktree-btn:hover {
-    background-color: #00ff41;
+.linktree-btn::before {
+    content: ">_";
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0;
     color: #000000;
-    box-shadow: 0 0 15px #00ff41;
-    transform: translateX(4px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .linktree-btn:hover {
+        background-color: #00ff41;
+        color: #000000;
+        box-shadow: 0 0 15px #00ff41;
+    }
+    .linktree-btn:hover .link-icon {
+        border-right-color: #000000;
+    }
+    .linktree-btn:hover .button-icon {
+        filter: invert(0%) brightness(0%);
+    }
+    .linktree-btn:hover::before {
+        opacity: 1;
+        animation: cursor-blink 1s step-end infinite;
+    }
+}
+
+.linktree-btn:active {
+    background-color: #00ff41 !important;
+    color: #000000 !important;
+    box-shadow: 0 0 20px #00ff41 !important;
+    transition: none;
+}
+
+.linktree-btn:active .link-icon {
+    border-right-color: #000000 !important;
+}
+
+.linktree-btn:active .button-icon {
+    filter: invert(0%) brightness(0%) !important;
 }
 
 .linktree-btn .link-icon {
-    border-right: 1px dashed rgba(0,255,65,0.6);
-    margin-right: 0;
+    border-right: 1px solid #00ff41;
     padding-right: 12px;
-    width: auto;
-    min-width: 32px;
-}
-
-.linktree-btn:hover .link-icon {
-    border-right-color: rgba(0,0,0,0.6);
+    margin-right: 12px;
 }
 
 .button-icon {
     filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg) brightness(118%) contrast(119%);
-    transition: filter 0.2s;
 }
-
-.linktree-btn:hover .button-icon {
-    filter: invert(0%) brightness(0%);
-}
-
-.btn-text {
-    text-align: left;
-    padding-left: 14px;
-    text-transform: lowercase;
-}
-
-.btn-text::before { content: '$ '; opacity: 0.6; }
 
 .legal-footer {
-    color: #00ff41;
-    font-family: 'Courier New', Courier, monospace;
-    opacity: 0.7;
-    letter-spacing: 1px;
+    color: #00a82b;
+    opacity: 0.8;
 }
 
-.legal-footer a:hover {
-    color: #00ff41;
-    text-shadow: 0 0 6px rgba(0,255,65,0.6);
-    opacity: 1;
+.linktree-desc b, 
+.linktree-desc strong {
+    color: #000000;
+    background-color: #00ff41;
+    padding: 0 4px;
+    font-weight: bold;
+}
+
+.linktree-desc i, 
+.linktree-desc em {
+    color: #ffffff;
+    border-bottom: 1px dashed #00ff41;
+    font-style: italic;
 }

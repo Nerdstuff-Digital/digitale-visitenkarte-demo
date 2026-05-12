@@ -92,3 +92,13 @@ body.linktree-body {
 .legal-footer a:hover {
     color: #d4c6a9;
 }
+
+.linktree-desc b, 
+.linktree-desc strong {
+    color: #d4c6a9;
+}
+
+.linktree-desc i, 
+.linktree-desc em {
+    opacity: 0.7;
+}

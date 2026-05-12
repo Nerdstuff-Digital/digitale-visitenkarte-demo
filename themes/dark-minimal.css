@@ -130,3 +130,14 @@ body.linktree-body {
 .legal-footer {
     color: #888888;
 }
+
+.linktree-desc b, 
+.linktree-desc strong {
+    color: #ffffff;
+    font-weight: 500;
+}
+
+.linktree-desc i, 
+.linktree-desc em {
+    color: #aaaaaa;
+}

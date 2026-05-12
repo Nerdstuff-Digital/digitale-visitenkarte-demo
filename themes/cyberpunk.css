@@ -1,16 +1,46 @@
+@keyframes move-cyber-grid {
+    0% { background-position: 0 0, 0 0; }
+    100% { background-position: 20px 20px, 20px 20px; }
+}
+
+@keyframes neon-flicker {
+    0%, 18%, 22%, 25%, 53%, 57%, 100% { text-shadow: 0 0 8px #00f3ff, 0 0 15px #00f3ff; opacity: 1; }
+    20%, 24%, 55% { text-shadow: none; opacity: 0.8; }
+}
+
+@keyframes text-glitch-anim {
+    0%, 95%, 100% { transform: translate(0) skew(0deg); }
+    96% { transform: translate(-3px, 1px) skew(10deg); color: #ff00ff; text-shadow: -2px 0 #00f3ff; }
+    98% { transform: translate(3px, -1px) skew(-10deg); color: #00f3ff; text-shadow: 2px 0 #ff00ff; }
+}
+
+@keyframes logo-glitch-anim {
+    0%, 94%, 100% { transform: translate(0) skew(0deg); box-shadow: 5px 5px 0 rgba(255,0,255,0.4); }
+    95% { transform: translate(-4px, 2px) skew(6deg); box-shadow: -5px -5px 0 #00f3ff; }
+    97% { transform: translate(4px, -2px) skew(-6deg); box-shadow: 5px 5px 0 #ff00ff; }
+}
+
+@keyframes box-glitch-anim {
+    0%, 94%, 100% { transform: translate(0) skew(0deg); }
+    95% { transform: translate(-4px, 2px) skew(4deg); box-shadow: -4px -4px 0 #00f3ff, 4px 4px 0 #ff00ff; border-color: #ff00ff; }
+    97% { transform: translate(4px, -2px) skew(-4deg); box-shadow: 4px 4px 0 #00f3ff, -4px -4px 0 #ff00ff; border-color: #00f3ff; }
+}
+
 body.linktree-body {
     background-color: #050508;
     background-image:
-        linear-gradient(rgba(0,243,255,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,243,255,0.03) 1px, transparent 1px);
+        linear-gradient(rgba(0,243,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,243,255,0.04) 1px, transparent 1px);
     background-size: 20px 20px;
     color: #ffffff;
     font-family: "Courier New", Courier, monospace;
+    animation: move-cyber-grid 4s linear infinite;
 }
 
 @media (min-width: 768px) {
     .linktree-container {
-        background-color: #050508;
+        background-color: rgba(5, 5, 8, 0.85);
+        backdrop-filter: blur(5px);
         border: 2px solid #00f3ff;
         box-shadow: 0 0 20px rgba(0,243,255,0.15), inset 0 0 10px rgba(0,243,255,0.05);
         border-radius: 0;
@@ -21,64 +51,81 @@ body.linktree-body {
     border: 2px solid #ff00ff;
     border-radius: 0;
     box-shadow: 5px 5px 0 rgba(255,0,255,0.4);
+    animation: logo-glitch-anim 7.1s infinite 0.5s;
 }
 
 .linktree-title {
     font-weight: bold;
     letter-spacing: 2px;
     text-transform: uppercase;
-    text-shadow: 0 0 8px #00f3ff;
     color: #ffffff;
+    animation: neon-flicker 4s infinite, text-glitch-anim 6.3s infinite 1s;
 }
 
 .linktree-desc {
-    color: #00f3ff;
-    border-left: 3px solid #00f3ff;
-    padding-left: 12px;
-    text-align: left;
-    font-size: 0.9rem;
+    color: #aaaaaa;
 }
 
 .action-btn {
-    background: transparent;
+    background: rgba(0,243,255,0.05);
     border: 2px solid #00f3ff;
-    box-shadow: 0 0 5px #00f3ff;
     border-radius: 0;
-}
-
-.action-btn:hover {
-    background-color: #00f3ff;
-    box-shadow: 0 0 15px #00f3ff;
+    box-shadow: 0 0 10px rgba(0,243,255,0.2);
+    transition: all 0.2s;
+    animation: box-glitch-anim 8.9s infinite 2.4s;
 }
 
 .action-btn .custom-icon {
-    filter: invert(100%);
+    filter: invert(85%) sepia(20%) saturate(5000%) hue-rotate(150deg) brightness(105%);
 }
 
-.action-btn:hover .custom-icon {
-    filter: invert(0%);
+@media (hover: hover) and (pointer: fine) {
+    .action-btn:hover {
+        background-color: #00f3ff;
+    }
+    .action-btn:hover .custom-icon {
+        filter: invert(100%);
+    }
+}
+
+.action-btn:active {
+    background-color: #00f3ff !important;
+    transition: none;
 }
 
 .social-icon {
+    background-color: rgba(0,243,255,0.05);
     border: 2px solid #00f3ff;
     border-radius: 0;
-    background: transparent;
-    transition: all 0.2s ease;
+    box-shadow: 0 0 8px rgba(0,243,255,0.2);
+    transition: all 0.2s;
 }
 
-.social-icon:hover {
-    background-color: #00f3ff;
-    box-shadow: 0 0 15px #00f3ff;
-    transform: scale(1.05);
-}
+.social-icon:nth-child(1) { animation: box-glitch-anim 5.7s infinite 0.2s; }
+.social-icon:nth-child(2) { animation: box-glitch-anim 8.3s infinite 1.5s; }
+.social-icon:nth-child(3) { animation: box-glitch-anim 6.1s infinite 2.1s; }
+.social-icon:nth-child(4) { animation: box-glitch-anim 7.9s infinite 0.8s; }
+.social-icon:nth-child(n+5) { animation: box-glitch-anim 9.3s infinite 3.1s; }
 
 .social-icon .custom-icon {
-    filter: invert(100%);
-    transition: filter 0.2s;
+    filter: invert(85%) sepia(20%) saturate(5000%) hue-rotate(150deg) brightness(105%);
 }
 
-.social-icon:hover .custom-icon {
-    filter: invert(0%);
+@media (hover: hover) and (pointer: fine) {
+    .social-icon:hover {
+        background-color: #00f3ff;
+    }
+    .social-icon:hover .custom-icon {
+        filter: invert(100%);
+    }
+}
+
+.social-icon:active {
+    background-color: #00f3ff !important;
+    transition: none;
+}
+.social-icon:active .custom-icon {
+    filter: invert(100%);
 }
 
 .featured-card {
@@ -86,6 +133,20 @@ body.linktree-body {
     border: 2px solid #00f3ff;
     border-radius: 0;
     box-shadow: 0 0 10px rgba(0,243,255,0.2);
+    transition: all 0.2s;
+    animation: box-glitch-anim 11.3s infinite 4.2s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .featured-card:hover {
+        box-shadow: 0 0 20px rgba(0,243,255,0.4);
+        background-color: rgba(0,243,255,0.1);
+    }
+}
+
+.featured-card:active {
+    background-color: rgba(0,243,255,0.2);
+    transition: none;
 }
 
 .featured-main-icon {
@@ -110,11 +171,20 @@ body.linktree-body {
     border-radius: 0;
     text-transform: uppercase;
     box-shadow: 0 0 8px rgba(0,243,255,0.3);
+    transition: all 0.2s;
 }
 
-.featured-action-btn:hover {
-    background-color: #00f3ff;
-    color: #050508;
+@media (hover: hover) and (pointer: fine) {
+    .featured-action-btn:hover {
+        background-color: #00f3ff;
+        color: #050508;
+    }
+}
+
+.featured-action-btn:active {
+    background-color: #00f3ff !important;
+    color: #050508 !important;
+    transition: none;
 }
 
 .linktree-btn {
@@ -127,40 +197,67 @@ body.linktree-body {
     box-shadow: 0 0 8px rgba(0,243,255,0.2);
     position: relative;
     overflow: hidden;
+    transition: background-color 0.2s, box-shadow 0.2s;
 }
 
-.linktree-btn:hover {
-    background-color: rgba(0,243,255,0.15);
-    box-shadow: 0 0 15px #00f3ff, inset 0 0 10px #00f3ff;
+.linktree-links .linktree-btn:nth-child(1) { animation: box-glitch-anim 6.7s infinite 0.4s; }
+.linktree-links .linktree-btn:nth-child(2) { animation: box-glitch-anim 9.1s infinite 2.2s; }
+.linktree-links .linktree-btn:nth-child(3) { animation: box-glitch-anim 5.3s infinite 1.1s; }
+.linktree-links .linktree-btn:nth-child(4) { animation: box-glitch-anim 7.3s infinite 3.5s; }
+.linktree-links .linktree-btn:nth-child(n+5) { animation: box-glitch-anim 8.7s infinite 0.7s; }
+
+@media (hover: hover) and (pointer: fine) {
+    .linktree-btn:hover {
+        background-color: rgba(0,243,255,0.15);
+        box-shadow: 0 0 15px #00f3ff, inset 0 0 10px rgba(0,243,255,0.3);
+    }
 }
 
-.linktree-btn::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 4px;
-    background-color: #00f3ff;
+.linktree-btn:active {
+    background-color: #00f3ff !important;
+    color: #050508 !important;
+    box-shadow: 0 0 20px #00f3ff !important;
+    transition: none;
 }
 
-.linktree-btn:hover::before {
-    background-color: #ff00ff;
+.linktree-btn .link-icon {
+    border-right: 2px solid #00f3ff;
+    border-radius: 0;
+    margin-right: 12px;
+    padding-right: 12px;
+}
+
+.linktree-btn:active .link-icon {
+    border-right-color: #050508;
 }
 
 .button-icon {
+    filter: invert(85%) sepia(20%) saturate(5000%) hue-rotate(150deg) brightness(105%);
+}
+
+.linktree-btn:active .button-icon {
     filter: invert(100%);
 }
 
 .btn-text {
-    text-align: left;
     letter-spacing: 1px;
+    text-align: left;
 }
 
 .legal-footer {
     color: #00f3ff;
+    font-family: "Courier New", Courier, monospace;
+    opacity: 0.7;
 }
 
-.legal-footer a:hover {
+.linktree-desc b, 
+.linktree-desc strong {
     color: #ff00ff;
+    text-shadow: 0 0 8px #ff00ff;
+}
+
+.linktree-desc i, 
+.linktree-desc em {
+    color: #ffffff;
+    text-shadow: 0 0 5px #ffffff;
 }

@@ -163,26 +163,37 @@ body.linktree-body {
     overflow: hidden;
 }
 
+@keyframes holoSweepIdle {
+    0% { left: -110%; opacity: 0.4; }
+    100% { left: 100%; opacity: 0.8; } 
+}
+
+@keyframes holoSweepHover {
+    0% { left: -150%; opacity: 1; }
+    100% { left: 100%; opacity: 1; }
+}
+
 .linktree-btn::before {
     content: "";
     position: absolute;
     top: 0;
     left: -150%;
-    width: 150%;
+    width: 90%;
     height: 100%;
     background: linear-gradient(115deg, transparent 20%, rgba(255,0,0,0.3) 30%, rgba(255,255,0,0.3) 45%, rgba(0,255,255,0.3) 60%, rgba(255,0,255,0.3) 75%, transparent 85%);
-    transition: left 0.6s ease;
     transform: skewX(-20deg);
+    animation: holoSweepIdle 5s infinite;
+    pointer-events: none;
 }
 
 .linktree-btn:hover::before {
-    left: 100%;
+    animation: holoSweepHover 0.3s forwards;
 }
 
 .linktree-btn:hover {
-    transform: translateY(-3px);
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(0, 255, 255, 0.15);
     border-color: #ffffff;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.6);
 }
 
 .link-icon {
@@ -211,4 +222,49 @@ body.linktree-body {
 
 .legal-footer a:hover {
     opacity: 1;
+}
+
+.linktree-desc b, 
+.linktree-desc strong {
+    color: #ffffff;
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+}
+
+.linktree-desc i, 
+.linktree-desc em {
+    color: #a8b2bd;
+}
+
+    .linktree-container {
+        box-shadow: 0 10px 30px rgba(0,0,0,0.8), inset 0 0 0 2px #06090e, inset 0 0 0 6px #a8b2bd;
+    }
+
+@keyframes containerFoil {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.linktree-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.linktree-container::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(125deg, transparent 20%, rgba(0,255,255,0.15) 40%, rgba(255,0,255,0.15) 60%, transparent 80%);
+    background-size: 300% 300%;
+    animation: containerFoil 9s infinite linear;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.linktree-profile, 
+#video-container, 
+.linktree-links, 
+.legal-footer {
+    position: relative;
+    z-index: 1;
 }

@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="de">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:; connect-src 'self' https://fowpadrwpuuwugskzauj.supabase.co https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;">
     <title>Vorschau – Digitale Visitenkarte</title>
     <link rel="icon" href="./img/favicon.png">
     <link rel="stylesheet" href="./themes/shared.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
-
 <body class="linktree-body">
+    <div id="preview-loading" style="position:fixed; inset:0; background:rgba(6,23,30,0.95); z-index:99999; display:flex; align-items:center; justify-content:center; color:white; font-family:sans-serif; transition:opacity 0.3s;">Lädt Vorschau...</div>
+    
     <div id="preview-banner" style="display:none; position:fixed; top:0; left:0; right:0; background-color:rgba(42,225,232,0.12); border-bottom:1px solid rgba(42,225,232,0.5); color:#2AE1E8; text-align:center; padding:10px 20px; font-size:0.85rem; font-family:sans-serif; letter-spacing:0.04em; z-index:9999; backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px);"></div>
 
     <main class="linktree-container">
@@ -18,15 +20,13 @@
         <div id="video-container"></div>
         <div id="links-container" class="linktree-links"></div>
         <footer class="legal-footer">
-            <a href="#">Impressum</a> <span>|</span> <a href="#">Datenschutz</a>
+            <a href="/impressum.html">Impressum</a> <span>|</span> <a href="/datenschutz.html">Datenschutz</a>
         </footer>
     </main>
 
+    <script src="./auth.js"></script>
     <script src="./render.js"></script>
     <script>
-        const SUPABASE_URL = 'https://fowpadrwpuuwugskzauj.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_6vNM_zVfFfcCjaI5TQRbWQ_X6swaIFk';
-
         function loadThemeCSS(theme) {
             const link = document.createElement('link');
             link.rel = 'stylesheet';
@@ -41,24 +41,49 @@
             document.querySelector('.linktree-container').style.marginTop = '80px';
         }
 
+        function hideLoading() {
+            const loader = document.getElementById('preview-loading');
+            if(loader) { loader.style.opacity = '0'; setTimeout(() => loader.remove(), 300); }
+        }
+
+        function isValidTreeData(td) {
+            return td && typeof td === 'object' &&
+                   (!td.theme || typeof td.theme === 'string') &&
+                   (!td.profile || typeof td.profile === 'object') &&
+                   (!td.socialIcons || Array.isArray(td.socialIcons)) &&
+                   (!td.videoModule || typeof td.videoModule === 'object') &&
+                   (!td.links || Array.isArray(td.links));
+        }
+
         document.addEventListener('DOMContentLoaded', async () => {
-            const liveRaw = localStorage.getItem('visitenkarte_preview');
+            const session = await requireAuth();
+            if (!session) {
+                const loader = document.getElementById('preview-loading');
+                if (loader) loader.textContent = 'Bitte einloggen…';
+                return; 
+            }
+            const user = session.user;
+            const client = await getAuthenticatedClient();
+
+            const liveRaw = sessionStorage.getItem('visitenkarte_preview');
             if (liveRaw) {
+                sessionStorage.removeItem('visitenkarte_preview'); 
                 try {
                     const td = JSON.parse(liveRaw);
+                    if (!isValidTreeData(td)) throw new Error('Ungültig');
                     loadThemeCSS(td.theme);
                     showBanner();
                     if (td.profile)     renderProfile(td.profile);
                     if (td.socialIcons) renderSocialIcons(td.socialIcons);
                     if (td.videoModule) renderVideoModule(td.videoModule);
                     if (td.links)       renderLinks(td.links);
+                    hideLoading();
                     return;
-                } catch (e) {}
+                } catch (e) { console.warn('Preview verworfen', e); }
             }
 
-            const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             try {
-                const { data, error } = await client.from('profiles').select('tree_data').limit(1).single();
+                const { data, error } = await client.from('profiles').select('tree_data').eq('user_id', user.id).limit(1).single();
                 if (error) throw error;
                 if (data && data.tree_data) {
                     const td = data.tree_data;
@@ -69,60 +94,13 @@
                     if (td.links)       renderLinks(td.links);
                 }
             } catch (err) {
-                console.error('Fehler beim Laden:', err);
+                console.error('Ladefehler:', err);
                 loadThemeCSS('darkgreen');
+                const main = document.querySelector('.linktree-container');
+                if(main) main.insertAdjacentHTML('afterbegin', '<p style="color:#e88080;text-align:center;padding:20px;">Daten konnten nicht geladen werden.</p>');
             }
+            hideLoading();
         });
-    </script>
-
-    <script>
-        (function() {
-            var body = document.body;
-            var startY = 0;
-            var pullY = 0;
-            var pulling = false;
-            var ease = 0.4;
-            var maxPull = 80;
-
-            function applyTransform(y) {
-                body.style.transform = 'translateY(' + y + 'px)';
-            }
-
-            function snapBack() {
-                body.style.transition = 'transform 0.45s cubic-bezier(0.23, 1, 0.32, 1)';
-                body.style.transform = 'translateY(0)';
-                setTimeout(function() { body.style.transition = ''; }, 450);
-            }
-
-            document.addEventListener('touchstart', function(e) {
-                startY = e.touches[0].clientY;
-                pulling = false;
-                pullY = 0;
-            }, { passive: true });
-
-            document.addEventListener('touchmove', function(e) {
-                var y = e.touches[0].clientY;
-                var delta = y - startY;
-                var scrollTop = window.scrollY || document.documentElement.scrollTop;
-                var atTop = scrollTop <= 0 && delta > 0;
-                var atBottom = (window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 1 && delta < 0;
-
-                if (atTop || atBottom) {
-                    pulling = true;
-                    pullY = delta * ease;
-                    if (pullY > maxPull) pullY = maxPull;
-                    if (pullY < -maxPull) pullY = -maxPull;
-                    applyTransform(pullY);
-                }
-            }, { passive: true });
-
-            document.addEventListener('touchend', function() {
-                if (pulling) {
-                    snapBack();
-                    pulling = false;
-                }
-            }, { passive: true });
-        })();
     </script>
 </body>
 </html>

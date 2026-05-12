@@ -1,21 +1,25 @@
 <!DOCTYPE html>
 <html lang="de">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:; connect-src 'self' https://fowpadrwpuuwugskzauj.supabase.co https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;">
     <title>Login – Digitale Visitenkarte</title>
     <link rel="icon" href="./img/favicon.png">
     <link rel="stylesheet" href="./style-admin.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        .login-wrapper { visibility: hidden; }
+        #login-loader { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; color:#888; font-family:sans-serif; }
+    </style>
 </head>
-
 <body class="login-page">
 
-    <div class="login-wrapper">
+    <div id="login-loader">Lade…</div>
 
+    <div class="login-wrapper" id="login-wrapper">
         <div class="login-logo-wrap">
-            <img src="./img/logo-cyber-d20.png" alt="Logo" class="login-logo" onerror="this.style.display='none'">
+            <img id="logo-img" src="./img/logo-cyber-d20.png" alt="Logo" class="login-logo">
             <span class="login-site-name">Digitale Visitenkarte</span>
         </div>
 
@@ -23,67 +27,131 @@
             <div id="view-login">
                 <h1 class="login-heading">Willkommen <span>zurück.</span></h1>
                 <p class="login-subline">Melde dich an, um deine Visitenkarte zu bearbeiten.</p>
-
                 <div class="field-group">
                     <label for="login-email">E-Mail</label>
                     <input type="email" id="login-email" placeholder="deine@email.de" autocomplete="email">
                 </div>
-
                 <div class="field-group">
                     <label for="login-password">Passwort</label>
                     <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
                 </div>
-
                 <button class="login-submit-btn" id="login-btn">Anmelden</button>
+                <button class="login-secondary-btn" id="forgot-pw-btn" style="margin-top: 8px; font-size: 0.8rem;">Passwort vergessen?</button>
                 <div class="status-message" id="login-status"></div>
-
                 <button class="login-secondary-btn" id="show-register-btn">Noch kein Konto? Registrieren</button>
             </div>
 
             <div id="view-register" style="display:none;">
                 <h1 class="login-heading">Konto <span>erstellen.</span></h1>
                 <p class="login-subline">Erstelle deinen Zugang zur Digitalen Visitenkarte.</p>
-
                 <div class="field-group">
                     <label for="reg-email">E-Mail</label>
                     <input type="email" id="reg-email" placeholder="deine@email.de" autocomplete="email">
                 </div>
-
                 <div class="field-group">
                     <label for="reg-password">Passwort</label>
                     <input type="password" id="reg-password" placeholder="Mindestens 6 Zeichen" autocomplete="new-password">
                 </div>
-
                 <div class="field-group">
                     <label for="reg-password2">Passwort wiederholen</label>
                     <input type="password" id="reg-password2" placeholder="••••••••" autocomplete="new-password">
                 </div>
-
                 <button class="login-submit-btn" id="register-btn">Konto erstellen</button>
                 <div class="status-message" id="register-status"></div>
-
                 <button class="login-secondary-btn" id="show-login-btn">Zurück zum Anmelden</button>
             </div>
+
+            <div id="view-recovery" style="display:none;">
+                <h1 class="login-heading">Neues <span>Passwort.</span></h1>
+                <p class="login-subline">Bitte vergib ein neues Passwort für dein Konto.</p>
+                <div class="field-group">
+                    <label for="rec-password">Neues Passwort</label>
+                    <input type="password" id="rec-password" autocomplete="new-password">
+                </div>
+                <div class="field-group">
+                    <label for="rec-password2">Passwort wiederholen</label>
+                    <input type="password" id="rec-password2" autocomplete="new-password">
+                </div>
+                <button class="login-submit-btn" id="recovery-btn">Passwort speichern</button>
+                <div class="status-message" id="recovery-status"></div>
+            </div>
         </div>
-
-
-
     </div>
 
     <script src="./auth.js"></script>
     <script>
-        const viewLogin    = document.getElementById('view-login');
-        const viewRegister = document.getElementById('view-register');
+        document.getElementById('logo-img').addEventListener('error', e => e.target.style.display='none');
 
-        document.getElementById('show-register-btn').addEventListener('click', () => {
-            viewLogin.style.display = 'none';
-            viewRegister.style.display = 'block';
+        let recoveryMode = sessionStorage.getItem('pending_recovery') === '1';
+
+        authClient.auth.onAuthStateChange((event) => {
+            if (event === 'PASSWORD_RECOVERY') {
+                recoveryMode = true;
+                sessionStorage.setItem('pending_recovery', '1');
+                showRecoveryView();
+            }
         });
 
-        document.getElementById('show-login-btn').addEventListener('click', () => {
-            viewRegister.style.display = 'none';
-            viewLogin.style.display = 'block';
-        });
+        function showRecoveryView() {
+            document.getElementById('view-login').style.display = 'none';
+            document.getElementById('view-register').style.display = 'none';
+            document.getElementById('view-recovery').style.display = 'block';
+            document.getElementById('login-wrapper').style.visibility = 'visible';
+            const loader = document.getElementById('login-loader');
+            if (loader) loader.remove();
+        }
+
+        (async () => {
+            try {
+                await new Promise(resolve => {
+                    if (recoveryMode) return resolve();
+                    const t = setTimeout(resolve, 300);
+                    let sub;
+                    try {
+                        const result = authClient.auth.onAuthStateChange((ev) => {
+                            if (ev === 'INITIAL_SESSION' || ev === 'PASSWORD_RECOVERY' || ev === 'SIGNED_IN') {
+                                clearTimeout(t);
+                                try { sub?.subscription?.unsubscribe(); } catch (e) {}
+                                resolve();
+                            }
+                        });
+                        sub = result?.data;
+                    } catch (e) {
+                        clearTimeout(t);
+                        resolve();
+                    }
+                });
+
+                if (recoveryMode) {
+                    showRecoveryView();
+                    return;
+                }
+
+                const hashHasRecovery = (window.location.hash || '').includes('type=recovery');
+                let session = null;
+                try {
+                    const result = await authClient.auth.getSession();
+                    session = result?.data?.session || null;
+                } catch (err) {
+                    console.error('getSession Fehler:', err);
+                }
+
+                if (session && !hashHasRecovery) {
+                    window.location.replace('./editor.html');
+                    return;
+                }
+
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('logout') === 'warn') {
+                    setStatus('login-status', 'error', 'Beim Abmelden trat ein Fehler auf.');
+                }
+            } finally {
+                // Sicherstellen: UI wird immer angezeigt, auch bei unerwarteten Fehlern oben
+                document.getElementById('login-wrapper').style.visibility = 'visible';
+                const loader = document.getElementById('login-loader');
+                if (loader) loader.remove();
+            }
+        })();
 
         function setStatus(id, type, text) {
             const el = document.getElementById(id);
@@ -91,46 +159,87 @@
             el.textContent = text;
         }
 
-        async function handleLogin() {
-            const email    = document.getElementById('login-email').value.trim();
-            const password = document.getElementById('login-password').value;
-            if (!email || !password) {
-                setStatus('login-status', 'error', 'Bitte E-Mail und Passwort eingeben.');
-                return;
+        document.getElementById('forgot-pw-btn').addEventListener('click', async () => {
+            const email = document.getElementById('login-email').value.trim();
+            if (!email) { setStatus('login-status', 'error', 'Bitte E-Mail eingeben.'); return; }
+            const btn = document.getElementById('forgot-pw-btn');
+            btn.disabled = true;
+            setStatus('login-status', 'loading', 'Wird gesendet...');
+            try {
+                const { error } = await authClient.auth.resetPasswordForEmail(email, {
+                    redirectTo: window.location.origin + window.location.pathname
+                });
+                if (error) {
+                    if (error.status === 429) {
+                        setStatus('login-status', 'error', 'Zu viele Anfragen – bitte 60 Sekunden warten.');
+                    } else if (error.status >= 500) {
+                        setStatus('login-status', 'error', 'Server-Fehler. Bitte später erneut versuchen.');
+                    } else {
+                        setStatus('login-status', 'success', 'Falls ein Konto existiert, wurde eine E-Mail versendet.');
+                    }
+                } else {
+                    setStatus('login-status', 'success', 'Falls ein Konto existiert, wurde eine E-Mail versendet.');
+                }
+            } catch (err) {
+                setStatus('login-status', 'error', 'Netzwerkfehler. Bitte später erneut versuchen.');
+            } finally {
+                btn.disabled = false;
             }
+        });
+
+        document.getElementById('recovery-btn').addEventListener('click', async () => {
+            const p1 = document.getElementById('rec-password').value;
+            const p2 = document.getElementById('rec-password2').value;
+            if (!p1 || p1.length < 6) { setStatus('recovery-status', 'error', 'Mindestens 6 Zeichen.'); return; }
+            if (p1 !== p2) { setStatus('recovery-status', 'error', 'Passwörter stimmen nicht überein.'); return; }
+
+            const btn = document.getElementById('recovery-btn');
+            btn.disabled = true;
+            setStatus('recovery-status', 'loading', 'Wird gespeichert...');
+
+            let success = false;
+            try {
+                const { error } = await authClient.auth.updateUser({ password: p1 });
+                if (error) {
+                    setStatus('recovery-status', 'error', error.message);
+                    return;
+                }
+                try { await authClient.auth.signOut({ scope: 'others' }); } catch (e) {}
+                setStatus('recovery-status', 'success', 'Passwort aktualisiert! Du wirst weitergeleitet…');
+                sessionStorage.removeItem('pending_recovery');
+                success = true;
+                setTimeout(() => window.location.replace('./editor.html'), 4000);
+            } catch (err) {
+                setStatus('recovery-status', 'error', 'Netzwerkfehler. Bitte erneut versuchen.');
+            } finally {
+                if (!success) btn.disabled = false;
+            }
+        });
+
+        async function handleLogin() {
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+            if (!email || !password) { setStatus('login-status', 'error', 'Bitte E-Mail und Passwort eingeben.'); return; }
             const btn = document.getElementById('login-btn');
             btn.disabled = true;
             setStatus('login-status', 'loading', 'Anmeldung läuft…');
             try {
                 await loginUser(email, password);
-                setStatus('login-status', 'success', 'Erfolgreich angemeldet! Weiterleitung…');
-                setTimeout(() => { window.location.href = './editor.html'; }, 800);
+                window.location.href = './editor.html';
             } catch (err) {
                 btn.disabled = false;
-                if (err.message && err.message.includes('Invalid login credentials')) {
-                    setStatus('login-status', 'error', 'E-Mail oder Passwort falsch.');
-                } else {
-                    setStatus('login-status', 'error', 'Fehler: ' + (err.message || 'Unbekannter Fehler'));
-                }
+                setStatus('login-status', 'error', 'E-Mail oder Passwort falsch.');
             }
         }
 
         async function handleRegister() {
-            const email    = document.getElementById('reg-email').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
             const password = document.getElementById('reg-password').value;
             const password2 = document.getElementById('reg-password2').value;
-            if (!email || !password || !password2) {
-                setStatus('register-status', 'error', 'Bitte alle Felder ausfüllen.');
-                return;
-            }
-            if (password !== password2) {
-                setStatus('register-status', 'error', 'Passwörter stimmen nicht überein.');
-                return;
-            }
-            if (password.length < 6) {
-                setStatus('register-status', 'error', 'Passwort muss mindestens 6 Zeichen haben.');
-                return;
-            }
+            if (!email || !password || !password2) { setStatus('register-status', 'error', 'Bitte alle Felder ausfüllen.'); return; }
+            if (password !== password2) { setStatus('register-status', 'error', 'Passwörter stimmen nicht überein.'); return; }
+            if (password.length < 6) { setStatus('register-status', 'error', 'Passwort muss mindestens 6 Zeichen haben.'); return; }
+            
             const btn = document.getElementById('register-btn');
             btn.disabled = true;
             setStatus('register-status', 'loading', 'Konto wird erstellt…');
@@ -138,31 +247,40 @@
                 const { data, error } = await authClient.auth.signUp({ email, password });
                 if (error) throw error;
                 if (data.session) {
-                    setStatus('register-status', 'success', 'Konto erstellt! Weiterleitung…');
-                    setTimeout(() => { window.location.href = './editor.html'; }, 800);
+                    window.location.href = './editor.html';
                 } else {
-                    setStatus('register-status', 'success', 'Konto erstellt! Du kannst dich jetzt anmelden.');
+                    setStatus('register-status', 'success', 'Konto erstellt! Bitte bestätige deine E-Mail-Adresse und melde dich danach an.');
                     btn.disabled = false;
                 }
             } catch (err) {
                 btn.disabled = false;
-                setStatus('register-status', 'error', 'Fehler: ' + (err.message || 'Unbekannter Fehler'));
+                setStatus('register-status', 'error', 'Fehler: Konto existiert evtl. schon.');
             }
         }
 
         document.getElementById('login-btn').addEventListener('click', handleLogin);
+        ['login-email', 'login-password'].forEach(id => {
+            document.getElementById(id).addEventListener('input', () => document.getElementById('login-status').className = 'status-message');
+        });
         document.getElementById('login-password').addEventListener('keydown', (e) => { if (e.key === 'Enter') handleLogin(); });
-        document.getElementById('login-email').addEventListener('input', () => { document.getElementById('login-status').className = 'status-message'; });
-        document.getElementById('login-password').addEventListener('input', () => { document.getElementById('login-status').className = 'status-message'; });
-
+        
         document.getElementById('register-btn').addEventListener('click', handleRegister);
+        ['reg-email', 'reg-password', 'reg-password2'].forEach(id => {
+            document.getElementById(id).addEventListener('input', () => document.getElementById('register-status').className = 'status-message');
+        });
         document.getElementById('reg-password2').addEventListener('keydown', (e) => { if (e.key === 'Enter') handleRegister(); });
+        
+        ['rec-password', 'rec-password2'].forEach(id => {
+            document.getElementById(id).addEventListener('input', () => document.getElementById('recovery-status').className = 'status-message');
+            document.getElementById(id).addEventListener('keydown', (e) => { 
+                if (e.key === 'Enter') document.getElementById('recovery-btn').click(); 
+            });
+        });
 
-        (async () => {
-            const { data: { session } } = await authClient.auth.getSession();
-            if (session) window.location.href = './editor.html';
-        })();
+        const vLogin = document.getElementById('view-login');
+        const vRegister = document.getElementById('view-register');
+        document.getElementById('show-register-btn').addEventListener('click', () => { vLogin.style.display = 'none'; vRegister.style.display = 'block'; });
+        document.getElementById('show-login-btn').addEventListener('click', () => { vRegister.style.display = 'none'; vLogin.style.display = 'block'; });
     </script>
-
 </body>
 </html>

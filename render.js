@@ -1,18 +1,79 @@
+function getSafeUrl(url) {
+    if (!url) return null;
+    const lowerUrl = url.trim().toLowerCase();
+    if (lowerUrl.startsWith('http://') || lowerUrl.startsWith('https://') || lowerUrl.startsWith('mailto:') || lowerUrl.startsWith('tel:')) {
+        return url.trim();
+    }
+    return null;
+}
+
+function getSafeImageUrl(url) {
+    if (!url) return '';
+    const trimmed = url.trim();
+    const lower = trimmed.toLowerCase();
+    if (lower.startsWith('//')) return '';
+    if (lower.startsWith('https://') || 
+        lower.startsWith('http://')  || 
+        lower.startsWith('./')       || 
+        lower.startsWith('/')        || 
+        !/^[a-z]+:/.test(lower)) {
+        return trimmed;
+    }
+    return '';
+}
+
+function sanitizeHTML(str) {
+    if (!str) return '';
+    
+    if (typeof DOMPurify === 'undefined') {
+        return str.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    
+    const ALLOWED_CSS_PROPS = new Set([
+        'font-weight', 'font-style', 'font-family', 'font-size',
+        'text-decoration', 'text-align', 'color'
+    ]);
+    
+    const hookFn = (node, evt) => {
+        if (evt.attrName !== 'style') return;
+        const safeParts = (evt.attrValue || '').split(';').map(s => s.trim()).filter(Boolean)
+            .filter(decl => {
+                const prop = decl.split(':')[0].trim().toLowerCase();
+                if (!ALLOWED_CSS_PROPS.has(prop)) return false;
+                const val = decl.split(':').slice(1).join(':').toLowerCase();
+                return !/url\s*\(|expression|behavior|@import|<|>/.test(val);
+            });
+        evt.attrValue = safeParts.join('; ');
+        if (!evt.attrValue) evt.keepAttr = false;
+    };
+    
+    DOMPurify.addHook('uponSanitizeAttribute', hookFn);
+    try {
+        return DOMPurify.sanitize(str, { 
+            ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'div', 'br', 'span'], 
+            ALLOWED_ATTR: ['style'] 
+        });
+    } finally {
+        DOMPurify.removeHook('uponSanitizeAttribute');
+    }
+}
+
 function renderProfile(profile) {
     const container = document.getElementById('profile-container');
     if (!container || !profile) return;
 
     if (profile.image) {
-        const img = document.createElement('img');
-        img.src = profile.image;
-        img.alt = profile.name || '';
-        img.classList.add('linktree-logo');
-        
-        if (profile.imagePos !== undefined) {
-            img.style.objectPosition = `center ${profile.imagePos}%`;
+        const safeImg = getSafeImageUrl(profile.image);
+        if (safeImg) {
+            const img = document.createElement('img');
+            img.src = safeImg;
+            img.alt = profile.name || '';
+            img.classList.add('linktree-logo');
+            const rawPos = parseInt(profile.imagePos);
+            const pos = Number.isFinite(rawPos) ? Math.max(0, Math.min(100, rawPos)) : 50;
+            img.style.objectPosition = `center ${pos}%`;
+            container.appendChild(img);
         }
-        
-        container.appendChild(img);
     }
 
     if (profile.name) {
@@ -24,8 +85,14 @@ function renderProfile(profile) {
 
     if (profile.description) {
         const p = document.createElement('p');
-        p.textContent = profile.description;
+        p.innerHTML = sanitizeHTML(profile.description);
         p.classList.add('linktree-desc');
+        if (profile.descFont) {
+            const ALLOWED_FONTS = ['', "'Courier New', Courier, monospace", "'Comic Sans MS', cursive", "'Impact', fantasy"];
+            if (ALLOWED_FONTS.includes(profile.descFont)) {
+                p.style.fontFamily = profile.descFont;
+            }
+        }
         container.appendChild(p);
     }
 }
@@ -41,19 +108,23 @@ function renderSocialIcons(icons) {
     row.classList.add('social-icons-row');
 
     validIcons.forEach(iconData => {
-        const a = document.createElement('a');
-        a.href = iconData.url || '#';
-        a.classList.add('social-icon');
-        if (iconData.url) {
+        const safeUrl = getSafeUrl(iconData.url);
+        const a = document.createElement(safeUrl ? 'a' : 'div');
+        if (safeUrl) {
+            a.href = safeUrl;
             a.target = '_blank';
             a.rel = 'noopener noreferrer';
         }
+        a.classList.add('social-icon');
         if (iconData.icon) {
-            const img = document.createElement('img');
-            img.src = iconData.icon;
-            img.alt = '';
-            img.classList.add('custom-icon');
-            a.appendChild(img);
+            const safeImg = getSafeImageUrl(iconData.icon);
+            if (safeImg) {
+                const img = document.createElement('img');
+                img.src = safeImg;
+                img.alt = '';
+                img.classList.add('custom-icon');
+                a.appendChild(img);
+            }
         }
         row.appendChild(a);
     });
@@ -65,23 +136,28 @@ function renderVideoModule(videoModule) {
     const container = document.getElementById('video-container');
     if (!container || !videoModule || !videoModule.isVisible) return;
 
-    const card = document.createElement('a');
-    card.href = videoModule.url || '#';
+    const safeUrl = getSafeUrl(videoModule.url);
+    const card = document.createElement(safeUrl ? 'a' : 'div');
     card.classList.add('featured-card');
-    if (videoModule.url) {
+    
+    if (safeUrl) {
+        card.href = safeUrl;
         card.target = '_blank';
         card.rel = 'noopener noreferrer';
     }
 
     if (videoModule.thumbnail) {
-        const wrapper = document.createElement('div');
-        wrapper.classList.add('featured-icon-wrapper');
-        const icon = document.createElement('img');
-        icon.src = videoModule.thumbnail;
-        icon.alt = '';
-        icon.classList.add('featured-main-icon');
-        wrapper.appendChild(icon);
-        card.appendChild(wrapper);
+        const safeImg = getSafeImageUrl(videoModule.thumbnail);
+        if (safeImg) {
+            const wrapper = document.createElement('div');
+            wrapper.classList.add('featured-icon-wrapper');
+            const icon = document.createElement('img');
+            icon.src = safeImg;
+            icon.alt = '';
+            icon.classList.add('featured-main-icon');
+            wrapper.appendChild(icon);
+            card.appendChild(wrapper);
+        }
     }
 
     if (videoModule.title) {
@@ -115,10 +191,11 @@ function renderLinks(links) {
     links.forEach(link => {
         if (link.isVisible === false) return;
 
-        const a = document.createElement('a');
-        a.href = link.url || '#';
+        const safeUrl = getSafeUrl(link.url);
+        const a = document.createElement(safeUrl ? 'a' : 'div');
         a.classList.add('linktree-btn');
-        if (link.url) {
+        if (safeUrl) {
+            a.href = safeUrl;
             a.target = '_blank';
             a.rel = 'noopener noreferrer';
         }
@@ -127,11 +204,14 @@ function renderLinks(links) {
         iconWrapper.classList.add('link-icon');
 
         if (link.icon) {
-            const icon = document.createElement('img');
-            icon.src = link.icon;
-            icon.alt = '';
-            icon.classList.add('custom-icon', 'button-icon');
-            iconWrapper.appendChild(icon);
+            const safeImg = getSafeImageUrl(link.icon);
+            if (safeImg) {
+                const icon = document.createElement('img');
+                icon.src = safeImg;
+                icon.alt = '';
+                icon.classList.add('custom-icon', 'button-icon');
+                iconWrapper.appendChild(icon);
+            }
         }
 
         const text = document.createElement('span');

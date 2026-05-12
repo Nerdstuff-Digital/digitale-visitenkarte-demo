@@ -111,9 +111,11 @@ body.linktree-body {
     font-size: 0.95rem;
     line-height: 1.5;
     margin: 0 0 20px 0;
+    width: 100%;           
     max-width: 90%;
     word-wrap: break-word;
     white-space: pre-wrap;
+    text-align: left;      
 }
 
 .social-icons-row {
@@ -272,4 +274,14 @@ body.linktree-body {
 img {
     max-width: 100%;
     height: auto;
+}
+
+.linktree-desc b, 
+.linktree-desc strong {
+    font-weight: bold;
+}
+
+.linktree-desc i, 
+.linktree-desc em {
+    font-style: italic;
 }
