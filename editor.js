@@ -218,9 +218,8 @@ async function loadEditorData() {
         populateLinks(td.links || []);
         setDirty(false);
     } catch (err) {
-        // Jede Exception (Netzwerk, JWT, RLS) – sonst hängt der Skeleton-Block für immer
         showToast('Profil konnte nicht geladen werden: ' + (err.message || err), 'error');
-    } finally {
+} finally {
         if (side) {
             side.querySelector('.pd-skeleton-text')?.remove();
             const wrap = side.querySelector('.pd-current-wrap');
@@ -230,6 +229,11 @@ async function loadEditorData() {
             side.style.visibility = 'visible';
             side.style.background = '';
             side.style.minHeight = '';
+            side.style.display = '';
+            side.style.alignItems = '';
+            side.style.justifyContent = '';
+            side.style.color = '';
+            side.style.fontSize = '';
         }
     }
 }

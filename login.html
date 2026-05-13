@@ -101,12 +101,18 @@
             if (loader) loader.remove();
         }
 
-        (async () => {
-            try {
-                await new Promise(resolve => {
+            (async () => {
+                try {
+                    await new Promise(resolve => {
                     if (recoveryMode) return resolve();
-                    const t = setTimeout(resolve, 300);
-                    let sub;
+                    
+                    let sub; 
+                    
+                    const t = setTimeout(() => {
+                        try { sub?.subscription?.unsubscribe(); } catch (e) {}
+                        resolve();
+                    }, 300);
+                    
                     try {
                         const result = authClient.auth.onAuthStateChange((ev) => {
                             if (ev === 'INITIAL_SESSION' || ev === 'PASSWORD_RECOVERY' || ev === 'SIGNED_IN') {
@@ -121,6 +127,7 @@
                         resolve();
                     }
                 });
+
 
                 if (recoveryMode) {
                     showRecoveryView();

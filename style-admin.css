@@ -1,5 +1,3 @@
-/* --- Admin/Editor Stylesheet --- */
-
 :root {
     --bg-color: #06171e;
     --card-bg: #091c22;
@@ -26,7 +24,6 @@ body {
     overflow-x: hidden;
 }
 
-/* --- Layout --- */
 .editor-header {
     background-color: var(--card-bg);
     border-bottom: 1px solid var(--border-color);
@@ -61,7 +58,6 @@ body {
     padding: 0 20px 80px 20px;
 }
 
-/* --- Buttons --- */
 button {
     cursor: pointer;
     font-family: inherit;
@@ -116,7 +112,6 @@ button {
     background-color: rgba(42, 225, 232, 0.2);
 }
 
-/* --- Typo / Fields --- */
 .editor-section {
     background-color: var(--card-bg);
     border-radius: 10px;
@@ -190,7 +185,6 @@ input:focus, select:focus {
     border-radius: 0;
 }
 
-/* --- Editor List / Draggable --- */
 .editor-list {
     display: flex;
     flex-direction: column;
@@ -226,7 +220,7 @@ input:focus, select:focus {
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    margin-top: 22px; /* Align with input field start, not label */
+    margin-top: 22px;
 }
 
 .row-icon-preview img {
@@ -243,7 +237,7 @@ input:focus, select:focus {
 }
 
 .row-fields .field-group {
-    margin-bottom: 0; /* Tighten up list rows */
+    margin-bottom: 0;
 }
 
 .row-actions {
@@ -252,7 +246,7 @@ input:focus, select:focus {
     gap: 8px;
     align-items: center;
     justify-content: center;
-    margin-top: 22px; /* Align with inputs */
+    margin-top: 22px;
 }
 
 .row-move-btn, .row-remove-btn {
@@ -277,7 +271,6 @@ input:focus, select:focus {
     color: var(--danger-color);
 }
 
-/* --- Public Link Bar --- */
 .editor-link-display {
     background-color: var(--card-bg);
     border-radius: 10px;
@@ -321,39 +314,33 @@ input:focus, select:focus {
     background-color: var(--primary-accent-dim);
 }
 
-/* --- Profile Details Pos Row --- */
 .pd-row {
     display: flex;
-    gap: 20px;
+    gap: 50px;
     margin-bottom: 20px;
     position: relative;
+    justify-content: center;
+    align-items: center;
 }
 
-.pd-profile-side {
-    flex: 0 0 120px;
+.pd-profile-side,
+.pd-design-side {
+    flex: 0 0 140px;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 10px;
 }
 
-.pd-design-side {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 10px;
-}
-
 .pd-label {
     font-size: 0.85rem;
     color: var(--text-muted);
-    align-self: flex-start;
+    align-self: center;
 }
 
 .pd-img-circle {
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
     background-color: rgba(0,0,0,0.3);
     border: 2px solid var(--border-color);
@@ -430,6 +417,10 @@ input:focus, select:focus {
     width: 250px;
 }
 
+.pd-fokus-wrapper.is-collapsed {
+    display: none;
+}
+
 input[type="range"] {
     -webkit-appearance: none;
     width: 100%;
@@ -454,17 +445,16 @@ input[type="range"]::-webkit-slider-thumb {
     margin-top: -5px;
 }
 
-/* --- Theme Selector --- */
 .pd-name-btn {
     width: 100%;
     background-color: rgba(255,255,255,0.03);
     border: 1px solid var(--border-color);
     color: var(--text-main);
-    padding: 10px 15px;
+    padding: 8px 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
 }
 
 .pd-arrow-icon {
@@ -481,26 +471,22 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 .pd-current-wrap {
+    width: 120px;
+    height: 120px;
     background-color: rgba(0,0,0,0.2);
     border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 8px;
-    margin-bottom: 8px;
-}
-
-.pd-design-side {
-    width: 100%; 
-}
-
-.pd-current-wrap {
-    width: 100%; 
-    box-sizing: border-box; 
+    border-radius: 12px;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
 }
 
 .pd-current-tile {
-    height: 50px;
     width: 100%;
-    border-radius: 6px;
+    height: 100%;
+    border-radius: 8px;
 }
 
 .pd-grid-wrap {
@@ -559,7 +545,6 @@ input[type="range"]::-webkit-slider-thumb {
     color: var(--primary-accent);
 }
 
-/* --- Rich Textarea --- */
 .rich-textarea {
     min-height: 100px;
     background-color: rgba(0, 0, 0, 0.2);
@@ -624,7 +609,6 @@ input[type="range"]::-webkit-slider-thumb {
     height: 28px;
 }
 
-/* --- Collapsible General --- */
 .editor-section-header {
     cursor: pointer;
     display: flex;
@@ -667,12 +651,10 @@ input[type="range"]::-webkit-slider-thumb {
     grid-template-rows: 0fr;
 }
 
-/* FIX: Ensure content editable is not hidden when collapsed */
 .editor-section-body.is-collapsed .rich-textarea {
     display: none;
 }
 
-/* --- Video Module --- */
 .toggle-switch {
     position: relative;
     display: inline-block;
@@ -733,7 +715,6 @@ input:checked + .toggle-slider:before {
     margin-bottom: 0;
 }
 
-/* --- Row Actions Visibility --- */
 .row-visibility-toggle {
     width: 32px;
     height: 18px;
@@ -749,7 +730,6 @@ input:checked + .toggle-slider:before {
     transform: translateX(14px);
 }
 
-/* --- Dialog / Modal --- */
 .editor-dialog {
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
@@ -822,218 +802,37 @@ input:checked + .toggle-slider:before {
     border: none;
 }
 
-.dialog-btn--primary:hover {
-    box-shadow: 0 0 10px var(--primary-accent);
-}
-
-/* --- Toast Notification --- */
-.save-toast {
-    position: fixed;
-    bottom: 25px;
-    left: 50%;
-    transform: translateX(-50%) translateY(100px);
-    background-color: #1a3a46;
-    color: #fff;
-    padding: 12px 25px;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    z-index: 1000;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    transition: transform 0.3s ease-out, opacity 0.3s;
-    opacity: 0;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    pointer-events: none;
-    white-space: nowrap;
-}
-
-.save-toast.visible {
-    transform: translateX(-50%) translateY(0);
-    opacity: 1;
-    pointer-events: auto;
-}
-
-.save-toast.success {
-    background-color: #0f3d2e;
-    border: 1px solid #1e7a5c;
-    color: #7ef5c8;
-}
-
-.save-toast.error {
-    background-color: #4d1419;
-    border: 1px solid #8f2932;
-    color: #fca5a5;
-}
-
-.save-toast.loading {
-    background-color: #3b3b11;
-    border: 1px solid #7a7a22;
-    color: #f5f58c;
-}
-
-.save-toast.loading::before {
-    content: "";
-    width: 16px;
-    height: 16px;
-    border: 2px solid currentColor;
-    border-right-color: transparent;
-    border-radius: 50%;
-    display: inline-block;
-    animation: toast-spin 0.75s linear infinite;
-}
-
-@keyframes toast-spin {
-    to { transform: rotate(360deg); }
-}
-
-/* --- Login Page Styles --- */
-.login-page {
-    background-color: #041014;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    padding: 20px;
-}
-
-.login-wrapper {
-    width: 100%;
-    max-width: 420px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.login-logo-wrap {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 30px;
-}
-
-.login-logo {
-    width: 36px;
-    height: 36px;
-}
-
-.login-site-name {
-    font-size: 1.2rem;
-    font-weight: 700;
-}
-
-.login-card {
-    background-color: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    padding: 35px;
-    width: 100%;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-}
-
-.login-heading {
-    font-size: 1.6rem;
-    font-weight: 800;
-    margin-bottom: 8px;
-}
-
-.login-heading span {
-    color: var(--primary-accent);
-}
-
-.login-subline {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    margin-bottom: 30px;
-}
-
-.login-submit-btn {
-    width: 100%;
-    background-color: var(--primary-accent);
-    color: #000;
-    border: none;
-    padding: 12px;
-    font-weight: 700;
-    font-size: 1rem;
-    margin-top: 10px;
-    margin-bottom: 15px;
-}
-
-.login-submit-btn:hover {
-    box-shadow: 0 0 15px var(--primary-accent);
-}
-
-.login-submit-btn:disabled {
-    background-color: var(--text-muted);
-    cursor: not-allowed;
-    box-shadow: none;
-}
-
-.login-secondary-btn {
-    width: 100%;
-    background: none;
-    border: 1px solid var(--border-color);
-    color: var(--text-muted);
-    padding: 11px;
-}
-
-.login-secondary-btn:hover {
-    border-color: var(--text-muted);
-    color: var(--text-main);
-}
-
-.status-message {
-    font-size: 0.85rem;
-    text-align: center;
-    margin: 10px 0;
-    min-height: 1.2em;
-}
-
-.status-message.error { color: #fca5a5; }
-.status-message.success { color: #7ef5c8; }
-.status-message.loading { color: #f5f58c; }
-
-/* --- Global Utilities --- */
-.is-collapsed {
-    display: none !important;
-}
-
 /* --- Responsive Adjustments --- */
 @media (max-width: 600px) {
-    .editor-header-title {
-        display: none;
-    }
-    
-    .editor-header-inner {
-        justify-content: center;
-    }
-
-    .editor-header-actions {
-        width: 100%;
-        justify-content: center;
-    }
+    .editor-header-title { display: none; }
+    .editor-header-inner { justify-content: center; }
+    .editor-header-actions { width: 100%; justify-content: center; }
 
     .pd-row {
         flex-direction: column;
-        align-items: stretch; /* Kinder bekommen volle Breite */
+        align-items: center;
         gap: 16px;
     }
+    
+    .pd-row.design-open { flex-direction: column-reverse; }
 
-    .pd-row.design-open {
-        flex-direction: column-reverse; /* Theme picker on top when open */
-    }
-
-    /* FIX: Profil-Seite und Design-Seite nehmen auf Mobile die komplette Breite */
     .pd-profile-side,
     .pd-design-side {
         flex: none;
         width: 100%;
     }
 
-    .pd-profile-side {
-        align-items: center; /* Bild + Buttons mittig setzen */
+    .pd-profile-side { align-items: center; }
+
+    .pd-current-wrap {
+        width: 100%;
+        height: auto;
+        padding: 6px;
+        box-sizing: border-box;
     }
+
+    .pd-current-tile { width: 100%; height: 60px; }
+    .pd-name-btn { width: 100%; }
 
     .pd-fokus-wrapper {
         position: fixed;
@@ -1044,7 +843,6 @@ input:checked + .toggle-slider:before {
         width: auto;
     }
 
-    /* FIX: Listen-Reihen wrappen sauber, Icons und Actions überlappen nicht mehr */
     .editor-list-row {
         flex-wrap: wrap;
         gap: 10px;
@@ -1055,48 +853,32 @@ input:checked + .toggle-slider:before {
         width: 36px;
         height: 36px;
         margin-top: 2px;
-        flex: none;
+        flex: 0 0 36px;
     }
 
     .row-fields {
-        /* Icon + Felder bleiben oben in einer Reihe; Felder füllen den Rest */
-        width: calc(100% - 46px); /* 36px Icon + 10px Gap */
+        flex: 1 1 calc(100% - 46px);
+        min-width: 0;
         order: 0;
     }
 
+    .row-fields input { min-width: 0; }
+
     .row-actions {
-        /* Actions (↑ ↓ Toggle X) brechen in eigene volle Zeile darunter */
-        width: 100%;
+        flex: 1 1 100%;
         flex-direction: row;
         flex-wrap: nowrap;
-        justify-content: space-evenly;
+        justify-content: space-between;
         align-items: center;
         gap: 16px;
         margin-top: 10px;
         margin-left: 0;
         border-top: 1px solid rgba(255,255,255,0.05);
-        padding-top: 10px;
+        padding-top: 12px;
         order: 3;
     }
 
-    /* Visibility-Toggle in den Action-Buttons gleich groß wie die Pfeile/Lösch-Buttons */
-    .row-visibility-toggle {
-        width: 36px;
-        height: 20px;
-        margin-top: 0;
-        flex: none;
-    }
-
-    .row-visibility-toggle,
-    .row-remove-btn,
-    .row-move-btn {
-        order: 0;
-    }
-
-    .row-actions .row-move-btn,
-    .row-actions .row-remove-btn {
-        width: 36px;
-        height: 36px;
-        font-size: 1rem;
-    }
+    .row-visibility-toggle { width: 36px; height: 20px; margin-top: 0; flex: none; }
+    .row-visibility-toggle, .row-remove-btn, .row-move-btn { order: 0; }
+    .row-actions .row-move-btn, .row-actions .row-remove-btn { width: 36px; height: 36px; font-size: 1rem; }
 }
